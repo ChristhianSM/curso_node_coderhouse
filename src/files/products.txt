@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Arroz",
+    "price": 10.5,
+    "thumbail": "https",
+    "id": 1
+  },
+  {
+    "name": "aceite",
+    "price": 5.5,
+    "thumbail": "https",
+    "id": 2
+  },
+  {
+    "name": "Azucar",
+    "price": 8.5,
+    "thumbail": "https",
+    "id": 3
+  }
+]
