@@ -5,7 +5,7 @@ const { Contenedor } = require('../models/UserManagerProducts')
 const app = express();
 
 //Settings
-app.set('port', 4000)
+app.set('port', 5000)
 const contenedor = new Contenedor(path.join(__dirname + '/../files/products.txt'));
 
 //Routes
