@@ -52,11 +52,8 @@ class  Contenedor {
         try {
             //Verificamos que exista el documento
             if (fs.existsSync(this.nameFile)) {
-                await fs.promises.writeFile(this.nameFile, JSON.stringify(products, null, 2));
-                return {
-                    status : "Success",
-                    message : "Product saved successfully"
-                }
+              
+                
             }else{
                 await fs.promises.writeFile(this.nameFile, JSON.stringify(products, null, 2));
                 return {
@@ -102,6 +99,14 @@ class  Contenedor {
         try {
             if (fs.existsSync(this.nameFile)) {
                 const products = JSON.parse(await fs.promises.readFile(this.nameFile, "utf-8"));
+                products.sort( (productA, productB) => {
+                    if (productA.id > productB.id) return 1;
+                    return -1
+                })
+                
+                //Ponemos los productos ordenados por id
+                await fs.promises.writeFile(this.nameFile, JSON.stringify(products, null, 2));
+
                 return {
                     mensaje : "Products obtained correctly",
                     payload : products
@@ -118,7 +123,7 @@ class  Contenedor {
                 message : error
             }
         }
-    }s
+    }
 
     async deleteById (id) {
         try {

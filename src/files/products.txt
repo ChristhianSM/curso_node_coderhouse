@@ -19,7 +19,19 @@
   },
   {
     "id": 4,
-    "name": "Carcasa",
+    "name": "Procesador ",
+    "price": 1500,
+    "thumbail": "https://"
+  },
+  {
+    "id": 5,
+    "name": "Procesador ",
+    "price": 1500,
+    "thumbail": "https://"
+  },
+  {
+    "id": 6,
+    "name": "Procesador ",
     "price": 1500,
     "thumbail": "https://"
   }

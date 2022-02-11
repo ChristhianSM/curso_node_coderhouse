@@ -22,7 +22,13 @@ app.get('/api/products', async (req, res) => {
 app.get('/api/products/:id', async (req, res) => {
     const idProduct = parseInt(req.params.id);
     const products = await contenedor.getAll();
-    if (idProduct > 0 && idProduct > products.payload.length) return res.send({ message : `ProductId ${idProduct} does not exist`});
+    //Validamos si el id ingresado es positivo o ingreso una letra
+    if (idProduct < 0 || isNaN(idProduct)) return res.send({ message : `ProductId is incorrect`});
+
+    //Buscar si existe el id del producto a buscar
+    const existId = products.payload.some(product => product.id === idProduct);
+    if (!existId) return res.send({ message : `ProductId ${idProduct} does not exist for Search`});
+
     const productFound = await contenedor.getById(idProduct); 
     res.send(productFound);
 })
@@ -63,26 +69,27 @@ app.put('/api/products/:id' , async (req, res) => {
 
     //Buscar si existe el id del producto a actualizar
     const existId = products.payload.some(product => product.id === idProduct);
-    if (!existId) return res.send({ message : `ProductId ${idProduct} does not exist for Deleted`});
-        const productFound = await contenedor.getById(idProduct);
-        const productUpdated = {
-            ...productFound.payload,
-            ...body,
-        }
-        
-        const productsUpdated = products.payload.map( product => {
-            if (product.id === idProduct) {
-                return productUpdated;
-            }else {
-                return product;
-            }
-        })
+    if (!existId) return res.send({ message : `ProductId ${idProduct} does not exist for Updated`});
 
-        contenedor.saveProducts(productsUpdated);
-        res.send({
-            message: `Producto with id ${idProduct} was updated successfully`,
-            productUpdated
-        })
+    const productFound = await contenedor.getById(idProduct);
+    const productUpdated = {
+        ...productFound.payload,
+        ...body,
+    }
+    
+    const productsUpdated = products.payload.map( product => {
+        if (product.id === idProduct) {
+            return productUpdated;
+        }else {
+            return product;
+        }
+    })
+
+    contenedor.saveProducts(productsUpdated);
+    res.send({
+        message: `Producto with id ${idProduct} was updated successfully`,
+        productUpdated
+    })
 })
 
 //Eliminar Producto por id 
