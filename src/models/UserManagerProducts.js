@@ -13,7 +13,7 @@ class  Contenedor {
                 const data = (await fs.promises.readFile(this.nameFile, "utf-8"));
 
                 //Verificamos si el archivo contiene productos, por que unicamente puede estar creado pero sin productos 
-                if (data != "") {
+                if (data !== "" && JSON.parse(data).length > 0) {
                     const products = JSON.parse(data);
                     const id = products[products.length - 1].id;
                     product.id = id + 1 ;
@@ -48,6 +48,31 @@ class  Contenedor {
         }
     }
 
+    async saveProducts(products = []) {
+        try {
+            //Verificamos que exista el documento
+            if (fs.existsSync(this.nameFile)) {
+                await fs.promises.writeFile(this.nameFile, JSON.stringify(products, null, 2));
+                return {
+                    status : "Success",
+                    message : "Product saved successfully"
+                }
+            }else{
+                await fs.promises.writeFile(this.nameFile, JSON.stringify(products, null, 2));
+                return {
+                    status : "Success",
+                    message : "Product saved successfully"
+                }
+            }
+            
+        } catch (error) {
+            return {
+                status : "Error",
+                message : error
+            }
+        }
+    }
+    
     async getById(id) {
         try {
             if (fs.existsSync(this.nameFile)) {

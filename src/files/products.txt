@@ -1,20 +1,26 @@
 [
   {
-    "name": "Arroz",
-    "price": 10.5,
-    "thumbail": "https",
-    "id": 1
+    "id": 1,
+    "name": "Tarjeta de video",
+    "price": 1500,
+    "thumbail": "https://"
   },
   {
-    "name": "aceite",
-    "price": 5.5,
-    "thumbail": "https",
-    "id": 2
+    "id": 2,
+    "name": "Tarjeta de video",
+    "price": 1500,
+    "thumbail": "https://"
   },
   {
-    "name": "Azucar",
-    "price": 8.5,
-    "thumbail": "https",
-    "id": 3
+    "id": 3,
+    "name": "Tarjeta de video",
+    "price": 1500,
+    "thumbail": "https://"
+  },
+  {
+    "id": 4,
+    "name": "Carcasa",
+    "price": 1500,
+    "thumbail": "https://"
   }
 ]
