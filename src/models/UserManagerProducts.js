@@ -50,18 +50,11 @@ class  Contenedor {
 
     async saveProducts(products = []) {
         try {
-            //Verificamos que exista el documento
-            if (fs.existsSync(this.nameFile)) {
-              
-                
-            }else{
-                await fs.promises.writeFile(this.nameFile, JSON.stringify(products, null, 2));
-                return {
-                    status : "Success",
-                    message : "Product saved successfully"
-                }
+            await fs.promises.writeFile(this.nameFile, JSON.stringify(products, null, 2));
+            return {
+                status : "Success",
+                message : "Product saved successfully"
             }
-            
         } catch (error) {
             return {
                 status : "Error",

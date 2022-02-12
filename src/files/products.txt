@@ -1,36 +1,6 @@
 [
   {
-    "id": 1,
-    "name": "Tarjeta de video",
-    "price": 1500,
-    "thumbail": "https://"
-  },
-  {
     "id": 2,
-    "name": "Tarjeta de video",
-    "price": 1500,
-    "thumbail": "https://"
-  },
-  {
-    "id": 3,
-    "name": "Tarjeta de video",
-    "price": 1500,
-    "thumbail": "https://"
-  },
-  {
-    "id": 4,
-    "name": "Procesador ",
-    "price": 1500,
-    "thumbail": "https://"
-  },
-  {
-    "id": 5,
-    "name": "Procesador ",
-    "price": 1500,
-    "thumbail": "https://"
-  },
-  {
-    "id": 6,
     "name": "Procesador ",
     "price": 1500,
     "thumbail": "https://"

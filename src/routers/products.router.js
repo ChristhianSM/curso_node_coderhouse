@@ -1,25 +1,18 @@
 const express = require('express');
 const path = require('path');
-const { Contenedor } = require('../models/UserManagerProducts')
 
-const app = express();
-app.use(express.json())
+const { Contenedor } = require('../models/UserManagerProducts');
 
-//Settings
-app.set('port', process.env.PORT || 5000)
+const router = express.Router();
+
 const contenedor = new Contenedor(path.join(__dirname + '/../files/products.txt'));
 
-//Routes
-app.get('/', (req, res) => {
-    res.send({mensaje: 'Hola Mundo'})
-})
-
-app.get('/api/products', async (req, res) => {
+router.get('/', async (req, res) => {
     const products = await contenedor.getAll();
     res.send(products.payload)
 })
 
-app.get('/api/products/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
     const idProduct = parseInt(req.params.id);
     const products = await contenedor.getAll();
     //Validamos si el id ingresado es positivo o ingreso una letra
@@ -34,8 +27,9 @@ app.get('/api/products/:id', async (req, res) => {
 })
 
 //Metodo post 
-app.post('/api/products', async (req, res) => {
+router.post('/', async (req, res) => {
     const body = req.body.product;
+    console.log(req.body)
     const products = await contenedor.getAll();
     let lastId = 0;
     if (products.payload.length !== 0) {
@@ -59,7 +53,7 @@ app.post('/api/products', async (req, res) => {
 })
 
 //Actualizar producto 
-app.put('/api/products/:id' , async (req, res) => {
+router.put('/:id' , async (req, res) => {
     const idProduct = parseInt(req.params.id);
     const body = req.body.product;
     const products = await contenedor.getAll();
@@ -84,7 +78,6 @@ app.put('/api/products/:id' , async (req, res) => {
             return product;
         }
     })
-
     contenedor.saveProducts(productsUpdated);
     res.send({
         message: `Producto with id ${idProduct} was updated successfully`,
@@ -93,7 +86,7 @@ app.put('/api/products/:id' , async (req, res) => {
 })
 
 //Eliminar Producto por id 
-app.delete('/api/products/:id' , async (req, res) => {
+router.delete('/:id' , async (req, res) => {
     const idProduct = parseInt(req.params.id);
     const products = await contenedor.getAll();
     
@@ -107,7 +100,7 @@ app.delete('/api/products/:id' , async (req, res) => {
     res.send(message)
 })
 
-app.get('/productoRandom', async (req, res) => {
+router.get('/productoRandom', async (req, res) => {
     const { payload } = await contenedor.getAll();
 
     const quantityProducts = payload.length;
@@ -115,9 +108,5 @@ app.get('/productoRandom', async (req, res) => {
     res.send(payload[random])
 })
 
-//Listenning the server
-const server = app.listen(app.get('port'), () => {
-    console.log(`Servidor http escuchando en el puesto ${server.address().port}`);
-})
 
-server.on("error", error => console.log(`Error en servidor ${error}`))
+module.exports = router
