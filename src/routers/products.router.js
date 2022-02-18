@@ -10,7 +10,7 @@ const contenedor = new Contenedor(path.join(__dirname + '/../files/products.txt'
 
 router.get('/', async (req, res) => {
     const products = await contenedor.getAll();
-    console.log(products)
+    console.log(products.payload)
     res.render('products' , {
         name : 'Christhian',
         products: products.payload

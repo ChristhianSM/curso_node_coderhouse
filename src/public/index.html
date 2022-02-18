@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos</title>
-    <link href="./dist/output.css" rel="stylesheet">
+    <link href="/dist/output.css" rel="stylesheet">
 </head>
 <body>
     <div class="h-screen bg-gradient-to-br from-blue-600 to-indigo-600 flex justify-center items-center w-full">
@@ -16,27 +16,30 @@
               <div>
                 <label for="name" class="block mb-1 text-gray-600 font-semibold">Name Product :</label>
                 <input type="text" name="name" class="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full name-product" />
-                
+                <p class="message-error-name text-red-500 h-5"></p>
               </div>
               <div>
                 <label for="price" class="block mb-1 text-gray-600 font-semibold">Price</label>
                 <input type="number" name="price" class="bg-indigo-50 px-4 py-2 outline-none rounded-md w-full price-product" />
+                <p class="message-error-price text-red-500 h-5"></p>
               </div>
               <div class="flex w-full items-center bg-grey-lighter">
-                <label class="w-full flex gap-4 justify-center px-4 py-2 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue-500 hover:text-white">
+                <label class="w-full flex items-center gap-4 justify-center px-4 py-2 bg-white text-blue rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue-500 hover:text-white">
                     <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                         <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
                     </svg>
-                    <span class="mt-2 text-base leading-normal">Select a file</span>
+                    <span class=" text-base leading-normal text-file">Select a file</span>
                     <input type='file' class="hidden file-product" name="file"/>
                 </label>
             </div>
             </div>
             <button class="mt-4 w-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-indigo-100 py-2 rounded-md text-lg tracking-wide btn-add-product" type="button">Add Product</button>
+            <p class="message-error mt-3 text-center bg-red-500 text-white p-1 hidden"></p>
           </div>
         </form>
       </div>
 
-    <script src="./js/main.js"></script>
+    <!-- <script src="./js/main.js"></script> -->
+    <script src="./js/app.js"></script>
 </body>
 </html>

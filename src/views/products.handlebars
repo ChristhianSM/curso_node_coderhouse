@@ -27,28 +27,37 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{#each products }}
+                            {{#if products}}
+                                {{#each products }}
+                                    <tr>
+                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0 w-10 h-10">
+                                                    {{this.id}}
+                                                </div>
+                                                <div class="ml-3">
+                                                    <img src={{this.thumbnail}} alt="">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                            <p class="text-gray-900 whitespace-no-wrap">{{this.name}}</p>
+                                        </td>
+                                        <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                                            <p class="text-gray-900 whitespace-no-wrap">
+                                                {{this.price}}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            {{else}}
                                 <tr>
-                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                        <div class="flex items-center">
-                                            <div class="flex-shrink-0 w-10 h-10">
-                                                {{this.id}}
-                                            </div>
-                                            <div class="ml-3">
-                                                <img src={{this.thumbnail}} alt="">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                        <p class="text-gray-900 whitespace-no-wrap">{{this.name}}</p>
-                                    </td>
-                                    <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                                        <p class="text-gray-900 whitespace-no-wrap">
-                                            {{this.price}}
-                                        </p>
+                                    <td colspan="4" class="text-center p-20">
+                                        <p class="mb-8">No hay productos para mostrar</p>
+                                        <a href="/" class="mt-4 w-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-indigo-100 p-2 rounded-md text-lg tracking-wide btn-add-product">Agregar Productos</a>
                                     </td>
                                 </tr>
-                            {{/each}}
+                            {{/if}}
                         </tbody>
                     </table>
                 
