@@ -1,4 +1,5 @@
 const express = require('express');
+const handlebars = require('express-handlebars');
 const path = require('path');
 
 const productsRouter = require('./routers/products.router');
@@ -8,6 +9,11 @@ const app = express();
 app.use(express.urlencoded({extended:true})) //Middleware para leer queries del url
 app.use(express.json()) //Middleware para leer archivos JSON
 app.use(express.static(path.join(__dirname + '/public'))) //Middleware para crear un espacio estatico
+
+app.engine('handlebars', handlebars.engine());
+app.set('views', __dirname+'/views');
+app.set('view engine', 'handlebars');
+
 
 //Rutas 
 app.use('/api/products', productsRouter)

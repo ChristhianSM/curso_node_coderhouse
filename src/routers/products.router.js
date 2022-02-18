@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 
 const { Contenedor } = require('../models/UserManagerProducts');
+const uploader = require('../services/Upload');
 
 const router = express.Router();
 
@@ -9,7 +10,11 @@ const contenedor = new Contenedor(path.join(__dirname + '/../files/products.txt'
 
 router.get('/', async (req, res) => {
     const products = await contenedor.getAll();
-    res.send(products.payload)
+    console.log(products)
+    res.render('products' , {
+        name : 'Christhian',
+        products: products.payload
+    })
 })
 
 router.get('/:id', async (req, res) => {
@@ -27,9 +32,14 @@ router.get('/:id', async (req, res) => {
 })
 
 //Metodo post 
-router.post('/', async (req, res) => {
-    const body = req.body.product;
-    console.log(req.body)
+router.post('/', uploader.single('file'), async (req, res) => {
+    const body = req.body;
+    
+    //Obtenemos el nombre del file 
+    const file = req.file;
+    if (!file) return res.status(500).send({error: "Couldn't upload file"})
+    body.thumbnail = `${req.protocol}://${req.hostname}:5000/img/${file.filename}`;
+
     const products = await contenedor.getAll();
     let lastId = 0;
     if (products.payload.length !== 0) {

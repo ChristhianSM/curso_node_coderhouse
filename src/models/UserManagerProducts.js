@@ -70,6 +70,7 @@ class  Contenedor {
                 const productFind = products.find( product => product.id === id);
                 if (productFind) {
                     return {
+                        status: 'success',
                         message : "Product found",
                         payload : productFind
                     }
@@ -101,6 +102,7 @@ class  Contenedor {
                 await fs.promises.writeFile(this.nameFile, JSON.stringify(products, null, 2));
 
                 return {
+                    status: 'success',
                     mensaje : "Products obtained correctly",
                     payload : products
                 };  
@@ -135,6 +137,7 @@ class  Contenedor {
                     }
                 }else{
                     return {
+                        status: 'Error',
                         message : `Producto with id ${id} does not exist`
                     }
                 }

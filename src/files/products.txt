@@ -1,8 +1,32 @@
 [
   {
+    "id": 1,
+    "name": "CPU",
+    "price": "500",
+    "thumbnail": "http://localhost:5000/img/1644991282398 - 1.PNG"
+  },
+  {
     "id": 2,
-    "name": "Procesador ",
-    "price": 1500,
-    "thumbail": "https://"
+    "name": "Monitor",
+    "price": "700",
+    "thumbnail": "http://localhost:5000/img/1644991299919 - Captura de pantalla (1).png"
+  },
+  {
+    "id": 3,
+    "name": "Christhian",
+    "price": "123",
+    "thumbnail": "http://localhost:5000/img/1644991415978 - 3.PNG"
+  },
+  {
+    "id": 4,
+    "name": "Christhian",
+    "price": "12",
+    "thumbnail": "http://localhost:5000/img/1644991483840 - 3.PNG"
+  },
+  {
+    "id": 5,
+    "name": "Christhian",
+    "price": "12312",
+    "thumbnail": "http://localhost:5000/img/1645159383410 - 2.PNG"
   }
 ]
