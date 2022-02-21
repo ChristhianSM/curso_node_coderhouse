@@ -1,0 +1,43 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(http-equiv='X-UA-Compatible' content='IE=edge')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Products
+  link(rel='stylesheet' href='/dist/output.css')
+.container.mx-auto.px-4(class='sm:px-8')
+  .py-8
+    div.flex.justify-between
+      h2.text-2xl.font-semibold.leading-tight Products
+      a.bg-gradient-to-tr.from-blue-600.to-indigo-600.text-indigo-100.p-2.rounded-md.text-lg.tracking-wide.btn-add-product(href="/") Add Product
+    .-mx-4.px-4.py-4.overflow-x-auto(class='sm:-mx-8 sm:px-8')
+      .inline-block.min-w-full.shadow.rounded-lg.overflow-hidden
+        table.min-w-full.leading-normal
+          thead
+            tr
+              th.px-5.py-3.border-b-2.border-gray-200.bg-gray-100.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider
+                | N°
+              th.px-5.py-3.border-b-2.border-gray-200.bg-gray-100.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider
+                | Name
+              th.px-5.py-3.border-b-2.border-gray-200.bg-gray-100.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider
+                | Price
+              th.px-5.py-3.border-b-2.border-gray-200.bg-gray-100.text-left.text-xs.font-semibold.text-gray-600.uppercase.tracking-wider
+                | Photo
+          tbody
+            if products
+                each product in products
+                    tr
+                        td.px-5.py-5.border-b.border-gray-200.bg-white.text-sm
+                            .flex.items-center
+                            .flex-shrink-0.w-10.h-10= product.id
+                        td.px-5.py-5.border-b.border-gray-200.bg-white.text-sm
+                            p.text-gray-900.whitespace-no-wrap= product.name
+                        td.px-5.py-5.border-b.border-gray-200.bg-white.text-sm
+                            p.text-gray-900.whitespace-no-wrap= product.price
+                        td.px-5.py-5.border-b.border-gray-200.bg-white.text-sm
+                            img(src= product.thumbnail alt=product.name height='100' width='100')
+            else
+                tr
+                    td.text-center.p-20(colspan='4')
+                        p.mb-8 No hay productos para mostrar
+                        a.mt-4.w-full.bg-gradient-to-tr.from-blue-600.to-indigo-600.text-indigo-100.p-2.rounded-md.text-lg.tracking-wide.btn-add-product(href='/') Agregar Productos

@@ -14,6 +14,14 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname+'/views');
 app.set('view engine', 'handlebars');
 
+//Plantillas pug
+// app.set('views', __dirname+'/views-pug');
+// app.set('view engine', 'pug');
+
+//Plantillas ejs
+// app.set('views', __dirname+'/views-ejs');
+// app.set('view engine', 'ejs');
+
 
 //Rutas 
 app.use('/api/products', productsRouter)

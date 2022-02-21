@@ -1,9 +1,9 @@
 module.exports = {
   content: [
-    "./src/public/*.{html,js}",
-    "./src/public/**/*.{html,js}",
-    './src/views/**/*.{handlebars, html}', 
-    './src/views/*.{handlebars, html}'
+    "./src/public/*.{html,js,pug,ejs}",
+    "./src/public/**/*.{html,js, pug,ejs}",
+    './src/views/**/*.{handlebars, html, pug,ejs}', 
+    './src/views/*.{handlebars, html, pug,ejs}'
   ],
   theme: {
     extend: {},
