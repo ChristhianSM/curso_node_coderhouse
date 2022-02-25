@@ -1,32 +1,27 @@
 [
   {
-    "id": 1,
+    "name": "Christhian",
+    "price": "10000",
+    "id": 1
+  },
+  {
+    "name": "Seiya",
+    "price": "500",
+    "id": 2
+  },
+  {
+    "name": "Seiya",
+    "price": "500",
+    "id": 3
+  },
+  {
     "name": "Christhian",
     "price": "1000",
-    "thumbnail": "http://localhost:5000/img/1645165453324 - Captura de pantalla (2).png"
+    "id": 4
   },
   {
-    "id": 2,
     "name": "Christhian",
-    "price": "12",
-    "thumbnail": "http://localhost:5000/img/1645165798412 - 1.PNG"
-  },
-  {
-    "id": 3,
-    "name": "Christhian",
-    "price": "10",
-    "thumbnail": "http://localhost:5000/img/1645167357563 - 1.PNG"
-  },
-  {
-    "id": 4,
-    "name": "Christhian",
-    "price": "1000",
-    "thumbnail": "http://localhost:5000/img/1645422047016 - 1.PNG"
-  },
-  {
-    "id": 5,
-    "name": "Christhian",
-    "price": "1000",
-    "thumbnail": "http://localhost:5000/img/1645425014916 - 1.PNG"
+    "price": "1212",
+    "id": 5
   }
 ]

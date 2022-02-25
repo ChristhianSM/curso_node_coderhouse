@@ -1,8 +1,10 @@
 const express = require('express');
+const SocketIO = require('socket.io');
 const handlebars = require('express-handlebars');
 const path = require('path');
 
 const productsRouter = require('./routers/products.router');
+const { Contenedor } = require('./models/UserManagerProducts');
 
 const app = express();
 
@@ -13,15 +15,6 @@ app.use(express.static(path.join(__dirname + '/public'))) //Middleware para crea
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname+'/views');
 app.set('view engine', 'handlebars');
-
-//Plantillas pug
-// app.set('views', __dirname+'/views-pug');
-// app.set('view engine', 'pug');
-
-//Plantillas ejs
-// app.set('views', __dirname+'/views-ejs');
-// app.set('view engine', 'ejs');
-
 
 //Rutas 
 app.use('/api/products', productsRouter)
@@ -35,3 +28,21 @@ const server = app.listen(app.get('port'), () => {
 })
 
 server.on("error", error => console.log(`Error en servidor ${error}`))
+
+
+//Instanciamos la clase Contenedor 
+const contenedor = new Contenedor(path.join(__dirname + '/files/products.txt'));
+
+//Sockets
+const io = SocketIO(server);
+io.on('connection', async (socket) => {
+    console.log("User Nuevo");
+    const products = await contenedor.getAll();
+    socket.emit('products' ,products.payload)
+
+    socket.on('sendProduct', async (data) => {
+        await contenedor.save(data);
+        const products = await contenedor.getAll();
+        socket.emit('products' ,products.payload)
+    })
+})

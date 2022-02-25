@@ -20,7 +20,6 @@ function validateForm() {
         return 
     }
 
-
     const formData = new FormData();
     formData.append('file', fileProduct.files[0])
     formData.append('name', nameProduct.value)
@@ -63,7 +62,6 @@ function validateInputs() {
             document.querySelector('.text-file').textContent = e.target.files[0].name;
             document.querySelector('.text-file').parentElement.classList.remove('hover:bg-blue-500')
             document.querySelector('.text-file').parentElement.classList.add('bg-green-400')
-            console.log("mrda")
         }
     })
 }
