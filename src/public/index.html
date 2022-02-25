@@ -9,7 +9,7 @@
 </head>
 <body class="bg-gray-300" style="font-family:Roboto">
     <div class="w-full h-screen flex items-center justify-center">
-        <form class="w-full md:w-2/6 bg-white rounded-lg">
+        <form class="w-full md:w-2/6 bg-white rounded-lg form-login">
             <div class="flex font-bold justify-center mt-6">
                 <img class="h-20 w-20"
                     src="https://raw.githubusercontent.com/sefyudem/Responsive-Login-Form/master/img/avatar.svg">
@@ -23,18 +23,22 @@
                         <p class="message-error h-6 text-red-500 ml-3 w-full" ></p>
                     </div>
                 </div>
-                <button type="button" class="w-full py-2 rounded-full bg-green-600 text-gray-100  focus:outline-none btn-agree">agree</button>
+                <button type="submit" class="w-full py-2 rounded-full bg-green-600 text-gray-100  focus:outline-none btn-agree">agree</button>
             </div>
         </form>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
     <script>
+        const socketLogin = io();
+
         const username = document.querySelector('.username');
-        const btnAgree = document.querySelector('.btn-agree');
+        const formLogin = document.querySelector('.form-login');
         const messageError = document.querySelector('.message-error');
 
-        btnAgree.addEventListener('click', (e) => {
-            if (username.value === "" || username.value.length < 3) {
+        formLogin.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (username.value.trim() === "" || username.value.trim().length < 3) {
                 messageError.textContent = 'Campo Requerido';
                 username.classList.add('border-red-500', 'placeholder-red-500')
                 return
@@ -42,7 +46,9 @@
             messageError.textContent = ''
             username.classList.remove('border-red-500', 'placeholder-red-500')
 
-            localStorage.setItem('userActive', username.value)
+            socketLogin.emit('user', username.value.trim());
+            
+            sessionStorage.setItem('userActive', username.value.trim())
             location.replace('products.html');
         })
     </script>

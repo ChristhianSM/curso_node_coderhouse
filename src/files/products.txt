@@ -1,27 +1,7 @@
 [
   {
     "name": "Christhian",
-    "price": "10000",
+    "price": "12",
     "id": 1
-  },
-  {
-    "name": "Seiya",
-    "price": "500",
-    "id": 2
-  },
-  {
-    "name": "Seiya",
-    "price": "500",
-    "id": 3
-  },
-  {
-    "name": "Christhian",
-    "price": "1000",
-    "id": 4
-  },
-  {
-    "name": "Christhian",
-    "price": "1212",
-    "id": 5
   }
 ]

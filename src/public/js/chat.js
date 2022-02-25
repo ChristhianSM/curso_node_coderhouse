@@ -2,9 +2,43 @@ const socketChat = io();
 
 const messageChat = document.querySelector('.chat-message');
 const formChat = document.querySelector('.form-chat');
+const containerMessages = document.querySelector('.container-messages');
+
+let user = "";
+
+document.addEventListener('DOMContentLoaded' , () => {
+    user = sessionStorage.getItem('userActive');
+    if (!user) location.replace('/');
+})
 
 formChat.addEventListener('submit' , (e) => {
     e.preventDefault();
     if (messageChat.value.trim() === "") return
-    console.log(socketChat)
+    
+    const hoy = new Date();
+    let hours = hoy.getHours();
+    const date = `${hours === 0 ? 12 : hours}:${hoy.getMinutes()} ${hours >= 12 ? 'PM' : 'AM'}`;
+    console.log(date)
+    const objMessage = {
+        id : socketChat.id,
+        message : messageChat.value.trim(),
+        timestamp : date,
+        user
+    }
+
+    socketChat.emit('message',objMessage);
+    messageChat.value = "";
+})
+
+socketChat.on('users-login', data => {
+    console.log(data)
+})
+
+socketChat.on('data-messages', async (messages) => {
+    const response = await fetch('./templates/message-chat.handlebars');
+    const data = await response.text();
+    
+    const processedtemplate = Handlebars.compile(data);
+    const html = processedtemplate({messages})
+    containerMessages.innerHTML = html;
 })

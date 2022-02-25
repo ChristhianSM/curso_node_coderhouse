@@ -5,6 +5,7 @@ const path = require('path');
 
 const productsRouter = require('./routers/products.router');
 const { Contenedor } = require('./models/UserManagerProducts');
+const Message = require('./models/UserManagerChat');
 
 const app = express();
 
@@ -34,15 +35,37 @@ server.on("error", error => console.log(`Error en servidor ${error}`))
 const contenedor = new Contenedor(path.join(__dirname + '/files/products.txt'));
 
 //Sockets
+const chat = new Message(path.join(__dirname + '/files/messages.txt'));
+
 const io = SocketIO(server);
 io.on('connection', async (socket) => {
     console.log("User Nuevo");
+
+    //Para mostrar los productos apenas inicie 
     const products = await contenedor.getAll();
-    socket.emit('products' ,products.payload)
+    io.emit('products' ,products.payload)
+
+    //Para mostrar los mensajes apenas inicie
+    const messages = await chat.getAll(); 
+    io.emit('data-messages', messages.payload);
+
+    //Recibimos al usuario logeado 
+    socket.on('user', async (user) => {
+        await chat.saveUsers(user);
+        const users = await chat.getAllUsers();
+        io.emit('users-login', users.payload)
+    })
 
     socket.on('sendProduct', async (data) => {
         await contenedor.save(data);
         const products = await contenedor.getAll();
-        socket.emit('products' ,products.payload)
+        io.emit('products' ,products.payload)
+    })
+
+    socket.on('message', async (data) => {
+        await chat.save(data);
+        const messages = await chat.getAll();
+
+        io.emit('data-messages', messages.payload);
     })
 })
