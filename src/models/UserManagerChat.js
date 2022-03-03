@@ -72,9 +72,24 @@ class Chat {
             if (fs.existsSync(this.pathFileUser)) {
                 const data = (await fs.promises.readFile(this.pathFileUser, "utf-8"));
 
-                //Verificamos si el archivo contiene productos, por que unicamente puede estar creado pero sin productos 
+                //Verificamos si el archivo contiene usuarios, por que unicamente puede estar creado pero sin usuarios 
                 if (data !== "" && JSON.parse(data).length > 0) {
                     const users = JSON.parse(data);
+                    const userExist = users.some(item => item.email === user.email);
+                    if (userExist) {
+                        const usersUpdated = users.map(item => {
+                            if (item.email === user.email) {
+                                item.user = user.user
+                                return item
+                            }
+                            return item
+                        });
+                        await fs.promises.writeFile(this.pathFileUser, JSON.stringify(usersUpdated, null, 2));
+                        return {
+                            status : "Success",
+                            message : "User saved successfully"
+                        }
+                    }
                     users.push(user);
                     await fs.promises.writeFile(this.pathFileUser, JSON.stringify(users, null, 2));
                     return {

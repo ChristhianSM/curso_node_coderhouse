@@ -23,15 +23,7 @@ class  Contenedor {
                         status : "Success",
                         message : "Product saved successfully"
                     }
-                }else{
-                    product.id = 1;
-                    await fs.promises.writeFile(this.nameFile, JSON.stringify([product], null, 2));
-                    return {
-                        status : "Success",
-                        message : "Product saved successfully"
-                    }
                 }
-            }else{
                 product.id = 1;
                 await fs.promises.writeFile(this.nameFile, JSON.stringify([product], null, 2));
                 return {
@@ -39,7 +31,6 @@ class  Contenedor {
                     message : "Product saved successfully"
                 }
             }
-            
         } catch (error) {
             return {
                 status : "Error",

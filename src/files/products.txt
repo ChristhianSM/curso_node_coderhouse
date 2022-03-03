@@ -1,7 +1,22 @@
 [
   {
-    "name": "Christhian",
-    "price": "12",
-    "id": 1
+    "id": 2,
+    "timestamp": 1646163295834,
+    "code": "31906d4e-6e76-4226-aa67-2b5c7b70a5ab",
+    "name": "Televisor",
+    "price": 10,
+    "image": "http://placeimg.com/640/480",
+    "description": "Uso para matematica",
+    "stock": 50
+  },
+  {
+    "id": 3,
+    "timestamp": 1646163301470,
+    "code": "0dd0a625-b1fe-4389-9bcd-83c32b187298",
+    "name": "Televisor",
+    "price": 10,
+    "image": "http://placeimg.com/640/480",
+    "description": "Uso para matematica",
+    "stock": 50
   }
 ]
