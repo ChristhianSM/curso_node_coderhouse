@@ -94,13 +94,13 @@ class  Contenedor {
 
                 return {
                     status: 'success',
-                    mensaje : "Products obtained correctly",
+                    message : "Products obtained correctly",
                     payload : products
                 };  
             }else{
                 return {
                     status: "Error",
-                    mensaje : "There are no products",
+                    message : "There are no products",
                 };
             }
         } catch (error) {

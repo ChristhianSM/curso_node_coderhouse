@@ -1,8 +1,8 @@
 [
   {
-    "id": 2,
-    "timestamp": 1646163295834,
-    "code": "31906d4e-6e76-4226-aa67-2b5c7b70a5ab",
+    "id": 3,
+    "timestamp": 1646163301470,
+    "code": "0dd0a625-b1fe-4389-9bcd-83c32b187298",
     "name": "Televisor",
     "price": 10,
     "image": "http://placeimg.com/640/480",
@@ -10,10 +10,30 @@
     "stock": 50
   },
   {
-    "id": 3,
-    "timestamp": 1646163301470,
-    "code": "0dd0a625-b1fe-4389-9bcd-83c32b187298",
-    "name": "Televisor",
+    "id": 5,
+    "timestamp": 1646365352298,
+    "code": "e2bb1c91-4c10-4728-a2ac-ecfef855278f",
+    "name": "Escuadra",
+    "price": 10,
+    "image": "http://placeimg.com/640/480",
+    "description": "Uso para matematica",
+    "stock": 50
+  },
+  {
+    "id": 6,
+    "timestamp": 1646365380436,
+    "code": "f15e499d-88df-46b8-9262-1db15b4ea91b",
+    "name": "Escuadra",
+    "price": 10,
+    "image": "http://placeimg.com/640/480",
+    "description": "Uso para matematica",
+    "stock": 50
+  },
+  {
+    "id": 7,
+    "timestamp": 1646365550108,
+    "code": "81f6a4af-bf0e-4b43-89f8-0aa5f7c0438a",
+    "name": "Escuadra",
     "price": 10,
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",

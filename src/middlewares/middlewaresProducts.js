@@ -6,8 +6,8 @@ const middlewareAuth = (req=request, res=response , next) => {
     
     // const isAuth = req.body.rol;
     if (!ADMIN) {
-        res.status(400).send({
-            meesage : "Ruta no autorizada",
+        res.status(401).send({
+            meesage : "Route Unauthorized",
             description : 'route /products unauthorized post method'
         })
     }else{

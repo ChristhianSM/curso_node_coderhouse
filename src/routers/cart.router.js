@@ -7,32 +7,32 @@ const containerCart = new ContainerCart();
 
 router.post('/' , async (req, res) => {
     const respuesta = await containerCart.createCart();
-    res.send(respuesta.payload)
+    res.status(200).send(respuesta);
 })
 
 router.delete('/:id' , async (req, res) => {
     const idCart = parseInt(req.params.id);
-    if (idCart < 0 || isNaN(idCart)) return res.status(400).send({ message : `CartId is incorrect`});
+    if (idCart < 0 || isNaN(idCart)) return res.status(400).send({ error: 'Error' ,message : `CartId is incorrect`});
     const message = await containerCart.deleteCart(idCart);
-    res.send(message)
+    res.status(200).send(message)
 })
 
 router.get('/:id/products', async (req, res) => {
     const idCart = parseInt(req.params.id);
-    if (idCart < 0 || isNaN(idCart)) return res.status(400).send({ message : `CartId is incorrect`});
+    if (idCart < 0 || isNaN(idCart)) return res.status(400).send({ error: 'Error' ,message : `CartId is incorrect`});
 
     const products = await containerCart.getProductsForCart(idCart);
-    res.send(products)
+    res.status(200).send(products)
 })
 
 router.post('/:id/products', async (req, res) => {
     const idCart = parseInt(req.params.id);
     const idProduct = req.body.id;
     console.log(idCart, idProduct)
-    if (idCart < 0 || isNaN(idCart)) return res.status(400).send({ message : `CartId is incorrect`});
+    if (idCart < 0 || isNaN(idCart)) return res.status(400).send({error: 'Error' , message : `CartId is incorrect`});
 
     const products = await containerCart.addProductToCart(idCart, idProduct);
-    res.send(products)
+    res.status(200).send(products)
 })
 
 router.delete('/:id/products/:id_products', async (req, res) => {

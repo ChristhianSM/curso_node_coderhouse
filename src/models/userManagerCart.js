@@ -186,11 +186,13 @@ class ContainerCart {
             const products = JSON.parse(await fs.promises.readFile(pathFileProducts, 'utf-8'));
 
             const idExistProduct = products.some( product => product.id === idProduct);
+            let currentCart = [];
 
             if (idExist && idExistProduct) {
                 const cartsUpdated = carts.map( cart => {
                     if (cart.id === id) {
                         cart.products.push(idProduct);
+                        currentCart = cart;
                         return cart
                     }else{
                         return cart
@@ -201,8 +203,8 @@ class ContainerCart {
                     await fs.promises.writeFile(pathFile, JSON.stringify(cartsUpdated, null, 2));
                     return {
                         status : 'success',
-                        message : 'Cart Delete Correctly',
-                        payload : cartsUpdated
+                        message : 'Cart Added Correctly',
+                        payload : currentCart
                     }
                 } catch (error) {
                     return {
@@ -229,9 +231,16 @@ class ContainerCart {
             
             //Verificamos si existe el id del carrito para agregar el producto 
             const idExist = carts.some( cart => cart.id === id);
+            if (!idExist) {
+                return {
+                    status : 'success',
+                    message : 'CartId Not Exist'
+                }
+            }
 
             //Verificamos si exite el id del producto a eliminar
             const cartFound = carts.find( cart => cart.id === id);
+            
             const idProductExist = cartFound.products.some( product => product === idProduct);
 
             if (idExist && idProductExist) {
