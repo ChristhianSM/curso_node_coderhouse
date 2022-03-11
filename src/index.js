@@ -23,7 +23,7 @@ app.use('/api/products', productsRouter)
 app.use('/api/cart', cartRouter)
 
 //Settings
-app.set('port', process.env.PORT || 8080)
+app.set('port', process.env.PORT || 5000)
 
 //Listenning the server
 const server = app.listen(app.get('port'), () => {

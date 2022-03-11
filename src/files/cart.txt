@@ -3,12 +3,18 @@
     "id": 3,
     "timestamp": 1646365937360,
     "products": [
-      3
+      3,
+      5
     ]
   },
   {
     "id": 4,
     "timestamp": 1646365957796,
+    "products": []
+  },
+  {
+    "id": 5,
+    "timestamp": 1646985420021,
     "products": []
   }
 ]
