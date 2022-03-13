@@ -1,11 +1,15 @@
-const path = require('path');
+const { request, response } = require('express');
 const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 
 const { Contenedor } = require("../models/UserManagerProducts");
 
 const contenedor = new Contenedor(path.join(__dirname + '/../files/products.txt'));
 
-const getProducts = async (req, res) => {
+const getProducts = async (req=request, res=response) => {
+    
+    //Leer los queries para obtener productos por limites
+    const { limit = 5 , from = 0} = req.query
 
     const products = await contenedor.getAll();
     res.status(200).send({

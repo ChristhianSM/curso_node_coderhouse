@@ -48,5 +48,54 @@
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",
     "stock": 50
+  },
+  {
+    "id": 10,
+    "timestamp": 1647150959381,
+    "code": "452bfa68-fe8e-48e9-846c-b039bd0e599c",
+    "price": 6000,
+    "image": "http://placeimg.com/640/480",
+    "description": "Uso para matematica",
+    "stock": 50,
+    "name": "Change Name Product"
+  },
+  {
+    "id": 11,
+    "timestamp": 1647150986726,
+    "code": "c188a207-17fb-45fe-b733-d3f6ee451e0e",
+    "price": 10,
+    "image": "http://placeimg.com/640/480",
+    "description": "Uso para matematica",
+    "stock": 50
+  },
+  {
+    "id": 12,
+    "timestamp": 1647151003297,
+    "code": "1a492b56-4400-43a2-ae19-0eb04d5b1986",
+    "name": "Escuadra",
+    "price": "asd",
+    "image": "http://placeimg.com/640/480",
+    "description": "Uso para matematica",
+    "stock": 50
+  },
+  {
+    "id": 13,
+    "timestamp": 1647151038001,
+    "code": "5334f2b2-3f22-454f-9378-6d2d7d2c5cd4",
+    "name": "Escuadra",
+    "price": "asd",
+    "image": "http://placeimg.com/640/480",
+    "description": "Uso para matematica",
+    "stock": 50
+  },
+  {
+    "id": 14,
+    "timestamp": 1647151175043,
+    "code": "166b1d86-7f42-4849-8d6e-0f33c589592b",
+    "name": "Escuadra",
+    "price": "asd",
+    "image": "http://placeimg.com/640/480",
+    "description": "Uso para matematica",
+    "stock": 50
   }
 ]
