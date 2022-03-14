@@ -1,7 +1,7 @@
-const express = require('express');
-const path = require('path');
+import  express from 'express';
+import  path from 'path';
 
-const ContainerCart = require('../models/userManagerCart');
+import  ContainerCart from '../models/userManagerCart.js';
 
 const containerCart = new ContainerCart();
 
@@ -44,7 +44,7 @@ const deleteProductFromCart = async (req, res) => {
     res.send(products)
 }
 
-module.exports = {
+export {
     getCarts,
     deleteCart,
     getProdcutsByCart,

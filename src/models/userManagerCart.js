@@ -1,7 +1,8 @@
-const path = require('path');
-const fs = require('fs');
+import path from 'path'
+import  fs from 'fs';
 
-const { v4: uuidv4 } = require('uuid');
+import  { v4 as uuidv4 } from 'uuid';
+import { __dirname } from '../helpers/getDirname.js'
 
 const pathFile = path.join(__dirname + '/../files/cart.txt');
 const pathFileProducts = path.join(__dirname + '/../files/products.txt');
@@ -279,4 +280,4 @@ class ContainerCart {
     }
 }
 
-module.exports = ContainerCart
+export default ContainerCart

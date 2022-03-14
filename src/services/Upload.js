@@ -1,5 +1,6 @@
-const multer = require('multer');
-const path = require('path')
+import multer from 'multer';
+import path from 'path'
+import { __dirname } from '../helpers/getDirname.js'
 
 let storage = multer.diskStorage({
     destination: function(req, file, callback) {
@@ -12,4 +13,4 @@ let storage = multer.diskStorage({
 
 const uploader = multer({storage})
 
-module.exports = uploader;
+export default uploader;

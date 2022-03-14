@@ -1,165 +1,151 @@
-const fs = require('fs');
+import knex from 'knex';
+import { v4 as uuidv4 } from 'uuid';
+// import { proccessInitialDatabase } from '../database/mysql/createTable.js';
 
 class  Contenedor {
-    constructor(nameFile){
-        this.nameFile = nameFile;
+    constructor(options, nameTable){
+        this.options = options;
+        this.nameTable = nameTable;
+
+        // this.createTable();
+    }
+
+    // async createTable () {
+    //     proccessInitialDatabase();
+    // }
+
+    async getAll(limit) {
+        try {
+            const database = knex(this.options);
+
+            //Mostramos solo los productos que estan activos
+            const [results, resultTotal] = await Promise.all([
+                database.from(this.nameTable).select("*").where('status', true).limit(limit),
+                database.count('id').from(this.nameTable).where('status', true)
+            ])
+            const products = JSON.parse(JSON.stringify(results));
+            const total = JSON.parse(JSON.stringify(resultTotal));
+            const totalProductsShow = products.length;
+            
+            //Eliminamos los campos que no deberian mostrarse al usuario
+            products.forEach( product => {
+                delete product.id;
+                delete product.id_product;
+                delete product.status;
+                delete product.timestamp;
+            })
+
+            return {
+                status : "success",
+                message : 'Products obtained correctly',
+                payload : {
+                    total : total[0]['count(`id`)'],
+                    totalProductsShow,
+                    products
+                }
+            }
+        } catch (error) {
+            return {
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
+            }
+        }
+        
+    }
+
+    async getById(id) {
+        try {
+            const database = knex(this.options);
+            const results = await database.from("products").select('*').where('id', id);
+            const products = JSON.parse(JSON.stringify(results))
+            return {
+                status : "success",
+                message : 'Products obtained correctly',
+                payload : products
+            }
+        } catch (error) {
+            return {
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
+            }
+        }
     }
 
     async save(product) {
-    
-        try {
-            //Verificamos que exista el documento
-            if (fs.existsSync(this.nameFile)) {
-                const data = (await fs.promises.readFile(this.nameFile, "utf-8"));
+        const newProduct = {
+            id_product: uuidv4(),
+            code : uuidv4(),
+            ...product,
+            timestamp : Date.now(),
+        }
 
-                //Verificamos si el archivo contiene productos, por que unicamente puede estar creado pero sin productos 
-                if (data !== "" && JSON.parse(data).length > 0) {
-                    const products = JSON.parse(data);
-                    const id = products[products.length - 1].id;
-                    product.id = id + 1 ;
-                    products.push(product);
-                    await fs.promises.writeFile(this.nameFile, JSON.stringify(products, null, 2));
-                    return {
-                        status : "Success",
-                        message : "Product saved successfully"
-                    }
-                }
-                product.id = 1;
-                await fs.promises.writeFile(this.nameFile, JSON.stringify([product], null, 2));
-                return {
-                    status : "Success",
-                    message : "Product saved successfully"
-                }
+        try {
+            const database = knex(this.options);
+            await database.from(this.nameTable).insert(newProduct);
+            return {
+                status : "success",
+                message : 'Products saved correctly',
+                payload : newProduct
             }
         } catch (error) {
             return {
-                status : "Error",
-                message : error
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
             }
         }
     }
 
-    async saveProducts(products = []) {
+    async updateProduct ( id, data ) {
         try {
-            await fs.promises.writeFile(this.nameFile, JSON.stringify(products, null, 2));
+            const database = knex(this.options);
+            await database.from(this.nameTable).where('id_product', id).update(data);
             return {
-                status : "Success",
-                message : "Product saved successfully"
+                status : "success",
+                message : 'Products Updated correctly'
             }
         } catch (error) {
             return {
-                status : "Error",
-                message : error
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
             }
         }
     }
-    
-    async getById(id) {
-        try {
-            if (fs.existsSync(this.nameFile)) {
-                const products = JSON.parse(await fs.promises.readFile(this.nameFile, "utf-8"));
-                const productFind = products.find( product => product.id === id);
-                if (productFind) {
-                    return {
-                        status: 'success',
-                        message : "Product found",
-                        payload : productFind
-                    }
-                }else{
-                    return {
-                        status : 'Error',
-                        message : "Product not found",
-                    }
-                }
-            }
-        } catch (error) {
-            return {
-                status : "Error",
-                message : error
-            }
-        }
-    }
-
-    async getAll() {
-        try {
-            if (fs.existsSync(this.nameFile)) {
-                const products = JSON.parse(await fs.promises.readFile(this.nameFile, "utf-8"));
-                products.sort( (productA, productB) => {
-                    if (productA.id > productB.id) return 1;
-                    return -1
-                })
-                
-                //Ponemos los productos ordenados por id
-                await fs.promises.writeFile(this.nameFile, JSON.stringify(products, null, 2));
-
-                return {
-                    status: 'success',
-                    message : "Products obtained correctly",
-                    payload : products
-                };  
-            }else{
-                return {
-                    status: "Error",
-                    message : "There are no products",
-                };
-            }
-        } catch (error) {
-            return {
-                status : "Error",
-                message : error
-            }
-        }
-    }
-
     async deleteById (id) {
         try {
-            if (fs.existsSync(this.nameFile)) {
-                const products = JSON.parse(await fs.promises.readFile(this.nameFile, "utf-8"));
-
-                //Primero verificamos que el id a eliminar exista 
-                const productFind = products.find( product => product.id === id);
-
-                if (productFind) {
-                    const newProducts = products.filter( product => product.id != id);
-                    await fs.promises.writeFile(this.nameFile, JSON.stringify(newProducts, null, 2));
-                    return {
-                        status : "Success", 
-                        message : "Product removed successfully"
-                    }
-                }else{
-                    return {
-                        status: 'Error',
-                        message : `Producto with id ${id} does not exist`
-                    }
-                }
+            const database = knex(this.options);
+            await database.from(this.nameTable).where('id_product', id).update({status: false});
+            return {
+                status : "success",
+                message : 'Products Deleted correctly'
             }
-            
         } catch (error) {
             return {
-                status : "Error",
-                message : error
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
             }
         }
     }
 
     async deleteAll () {
         try {
-            if (fs.existsSync(this.nameFile)) {
-                await fs.promises.writeFile(this.nameFile, "");
-                return {
-                    status: "Success",
-                    message : `Products removed successfully`
-                }
-            }
+            const database = knex(this.options);
+            await database.from(this.nameTable).del();
+            
         } catch (error) {
             return {
-                status : "Error",
-                message : error
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
             }
         }
     }
 }
 
-module.exports = {
+export {
     Contenedor
 }

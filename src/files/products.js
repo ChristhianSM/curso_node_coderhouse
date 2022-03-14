@@ -1,101 +1,114 @@
-[
+const products = [
   {
-    "id": 3,
-    "timestamp": 1646163301470,
+    "id_product": "qweasdas13123asdasdadad",
     "code": "0dd0a625-b1fe-4389-9bcd-83c32b187298",
     "name": "Televisor",
     "price": 10,
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",
-    "stock": 50
+    "stock": 50,
+    "status": true,
+    "timestamp": 1646163301470
   },
   {
-    "id": 6,
-    "timestamp": 1646365380436,
+    "id_product": "qweasdas13123asdasdada1",
     "code": "f15e499d-88df-46b8-9262-1db15b4ea91b",
     "name": "Escuadra",
     "price": 10,
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",
-    "stock": 50
+    "stock": 50,
+    "status": true,
+    "timestamp": 1646365380436
   },
   {
-    "id": 7,
-    "timestamp": 1646365550108,
+    "id_product": "qweasdas13123asdasdada3",
     "code": "81f6a4af-bf0e-4b43-89f8-0aa5f7c0438a",
     "name": "Escuadra",
     "price": 10,
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",
-    "stock": 50
+    "stock": 50,
+    "status": true,
+    "timestamp": 1646365550108
   },
   {
-    "id": 8,
-    "timestamp": 1646985267945,
+    "id_product": "qweasdas13123asdasdada4",
     "code": "fd98c684-e65f-4c2e-ac49-7312ddc0cfe4",
     "name": "Escuadra",
     "price": 10,
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",
-    "stock": 50
+    "stock": 50,
+    "status": true,
+    "timestamp": 1646985267945,
   },
   {
-    "id": 9,
-    "timestamp": 1646985283543,
+    "id_product": "qweasdas13123asdasdada5",
     "code": "a847760b-0921-42ec-91ae-f49625578f40",
     "name": "Escuadra",
     "price": 10,
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",
-    "stock": 50
+    "stock": 50,
+    "status": true,
+    "timestamp": 1646985283543,
   },
   {
-    "id": 10,
-    "timestamp": 1647150959381,
+    "id_product": "qweasdas13123asdasdada6",
+    "name": "Change Name Product",
     "code": "452bfa68-fe8e-48e9-846c-b039bd0e599c",
     "price": 6000,
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",
     "stock": 50,
-    "name": "Change Name Product"
+    "status": true,
+    "timestamp": 1647150959381,
   },
   {
-    "id": 11,
-    "timestamp": 1647150986726,
+    "id_product": "qweasdas13123asdasdada7",
+    "name" : "Televisor de 20 pulgadas",
     "code": "c188a207-17fb-45fe-b733-d3f6ee451e0e",
     "price": 10,
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",
-    "stock": 50
+    "stock": 50,
+    "status": true,
+    "timestamp": 1647150986726,
   },
   {
-    "id": 12,
-    "timestamp": 1647151003297,
+    "id_product": "qweasdas13123asdasdada8",
     "code": "1a492b56-4400-43a2-ae19-0eb04d5b1986",
     "name": "Escuadra",
     "price": "asd",
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",
-    "stock": 50
+    "stock": 50,
+    "status": true,
+    "timestamp": 1647151003297,
   },
   {
-    "id": 13,
-    "timestamp": 1647151038001,
+    "id_product": "qweasdas13123asdasdada9",
     "code": "5334f2b2-3f22-454f-9378-6d2d7d2c5cd4",
     "name": "Escuadra",
     "price": "asd",
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",
-    "stock": 50
+    "stock": 50,
+    "status": true,
+    "timestamp": 1647151038001,
   },
   {
-    "id": 14,
-    "timestamp": 1647151175043,
+    "id_product": "qweasdas13123asdasdad10",
     "code": "166b1d86-7f42-4849-8d6e-0f33c589592b",
     "name": "Escuadra",
     "price": "asd",
     "image": "http://placeimg.com/640/480",
     "description": "Uso para matematica",
-    "stock": 50
+    "stock": 50,
+    "status": true,
+    "timestamp": 1647151175043,
   }
 ]
+
+export default products

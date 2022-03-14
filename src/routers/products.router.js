@@ -1,29 +1,32 @@
-const express = require('express');
-const { check } = require('express-validator');
+import express from 'express';
+import { check } from 'express-validator';
 
-const { 
+import { 
     getProducts, 
     getProductById, 
     postProduct, 
     putProduct, 
-    deleteProduct, 
-    postProductRandom } = require('../controllers/products.controller');
+    deleteProduct,
+    deleteAllProduct} from '../controllers/products.controller.js'
+    
+import { existIdProduct } from '../helpers/db-validator.js';
+import { middlewareAuth } from '../middlewares/middlewaresProducts.js';
+import  { validateInputs } from '../middlewares/validateInputs.js';
 
-const { middlewareAuth } = require('../middlewares/middlewaresProducts');
-const { validateInputs } = require('../middlewares/validateInputs');
-
-const uploader = require('../services/Upload');
+import  uploader from '../services/Upload.js';
 const router = express.Router();
 
 //Get all Products
 router.get('/', [
-    check('limit', 'Must be a numeric value').optional().isNumeric(),
+    check('page', 'Must be a numeric value').optional().isNumeric(),
     check('from', 'Must be a numeric value').optional().isNumeric(),
     validateInputs,
 ], getProducts)
 
 //Get Product by Id
 router.get('/:id', [
+    check('id', 'ID Product is requerid').not().isEmpty().isNumeric().withMessage('Must be a numeric value'),
+    validateInputs,
 ] ,
 getProductById)
 
@@ -42,21 +45,27 @@ router.post('/', [
 
 //Updated Product
 router.put('/:id',[
+    middlewareAuth,
+    check('id').custom(existIdProduct),
     check('name', 'Name is requerid').optional().not().isEmpty(),
     check('price', 'Price is requerid').optional().isNumeric().withMessage('Price Must be a numeric value'),
     check('image', 'Image is requerid').optional(),
     check('description', 'Name is requerid').optional(),
     check('stock', 'Stock is requerid').optional().isNumeric().withMessage('Price Must be a numeric value'),
-    validateInputs,
-    middlewareAuth,
+    validateInputs
 ]
 , putProduct)
 
 //Delete Product by id 
-router.delete('/:id' ,middlewareAuth,  deleteProduct)
+router.delete('/:id' ,[
+    middlewareAuth,
+    check('id').custom(existIdProduct),
+],  deleteProduct);
 
-//Get Product Ramdom
-router.get('/productoRandom', postProductRandom)
+router.delete('/all', [
+    middlewareAuth
+], deleteAllProduct)
 
 
-module.exports = router
+
+export default router;

@@ -1,5 +1,6 @@
-const path = require('path');
-const fs = require('fs');
+
+import fs from 'fs';
+import { __dirname } from '../helpers/getDirname.js'
 
 class Chat {
 
@@ -139,4 +140,4 @@ class Chat {
     }
 }
 
-module.exports = Chat
+export default Chat

@@ -1,12 +1,14 @@
-const express = require('express');
-const SocketIO = require('socket.io');
-const handlebars = require('express-handlebars');
-const path = require('path');
+import express from 'express';
+import path from 'path'
+import {Server as SocketIO} from 'socket.io'
+import handlebars from 'express-handlebars'
 
-const productsRouter = require('./routers/products.router');
-const cartRouter = require('./routers/cart.router');
-const { Contenedor } = require('./models/UserManagerProducts');
-const Message = require('./models/UserManagerChat');
+import productsRouter from './routers/products.router.js';
+import cartRouter from './routers/cart.router.js';
+
+import { Contenedor } from'./models/UserManagerProducts.js';
+import Message  from'./models/UserManagerChat.js';
+import { __dirname } from './helpers/getDirname.js'
 
 const app = express();
 
@@ -39,7 +41,7 @@ const contenedor = new Contenedor(path.join(__dirname + '/files/products.txt'));
 //Sockets
 const chat = new Message(path.join(__dirname + '/files/messages.txt'));
 
-const io = SocketIO(server);
+const io = new SocketIO(server);
 io.on('connection', async (socket) => {
     //Para mostrar los productos apenas inicie 
     const products = await contenedor.getAll();

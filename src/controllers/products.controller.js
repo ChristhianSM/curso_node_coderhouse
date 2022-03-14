@@ -1,22 +1,18 @@
-const { request, response } = require('express');
-const { v4: uuidv4 } = require('uuid');
-const path = require('path');
+import  { request, response } from 'express';
+import  { Contenedor } from "../models/UserManagerProducts.js";
+import { __dirname } from '../helpers/getDirname.js'
+import options from '../database/mysql/options/mysqlconfig.js'
 
-const { Contenedor } = require("../models/UserManagerProducts");
-
-const contenedor = new Contenedor(path.join(__dirname + '/../files/products.txt'));
+const contenedor = new Contenedor(options, 'products');
 
 const getProducts = async (req=request, res=response) => {
-    
-    //Leer los queries para obtener productos por limites
-    const { limit = 5 , from = 0} = req.query
 
-    const products = await contenedor.getAll();
-    res.status(200).send({
-        status : products.status,
-        message: products.message,
-        products : products.payload
-    })
+    //Leer los queries para obtener productos por limites
+    const { limit = 10 , from = 0} = req.query
+
+    const result = await contenedor.getAll(parseInt(limit));
+    res.status(result.status === "success" ? 200 : 400).json(result)
+
 
     // res.render('products' , {
     //     name : 'Christhian',
@@ -26,117 +22,47 @@ const getProducts = async (req=request, res=response) => {
 
 const getProductById =async (req, res) => {
     const idProduct = parseInt(req.params.id);
-    const products = await contenedor.getAll();
-    //Validamos si el id ingresado es positivo o ingreso una letra
-    if (idProduct < 0 || isNaN(idProduct)) return res.send({ message : `ProductId is incorrect`});
-
-    //Buscar si existe el id del producto a buscar
-    const existId = products.payload.some(product => product.id === idProduct);
-    if (!existId) return res.status(400).send({ message : `ProductId ${idProduct} does not exist for Search`});
-
-    const productFound = await contenedor.getById(idProduct); 
-    res.status(200).send({
-        ...productFound
-    });
+    
+    const result = await contenedor.getById(idProduct); 
+    res.status(result.status === "success" ? 200 : 400).json(result)
 }
 
 const postProduct = async (req, res) => {
     const body = req.body;
     
-    //Obtenemos el nombre del file 
-    // const file = req.file;
-    // if (!file) return res.status(500).send({error: "Couldn't upload file"})
-    // body.thumbnail = `${req.protocol}://${req.hostname}:5000/img/${file.filename}`;
-
-    const products = await contenedor.getAll();
-    let lastId = 0;
-    if (products.payload.length !== 0) {
-        const lengthProduct = products.payload.length;
-        const lastProduct = products.payload[lengthProduct-1];
-        lastId = lastProduct.id;
-    }
-
-    //Creamos el nuevoProducto
-    const newProduct = {
-        id: lastId + 1,
-        timestamp : Date.now(),
-        code : uuidv4(),
-        ...body
-    }
     //Agregamos el producto para que persista
-    const product = await contenedor.save(newProduct);
-    
-    res.status(201).send({
-        status : product.status,
-        message: product.message,
-        newProduct,
-        id: lastId + 1
-    })
+    const result = await contenedor.save(body);
+    res.status(result.status === "success" ? 200 : 400).json(result)
 }
 
 const putProduct = async (req, res) => {
-    const idProduct = parseInt(req.params.id);
+    const idProduct = req.params.id;
     const body = req.body;
-    const products = await contenedor.getAll();
 
-    //Validamos si el id ingresado es positivo o ingreso una letra
-    if (idProduct < 0 || isNaN(idProduct)) return res.send({ message : `ProductId is incorrect`});
-
-    //Buscar si existe el id del producto a actualizar
-    const existId = products.payload.some(product => product.id === idProduct);
-    if (!existId) return res.status(400).send({ status: 'error', message : `ProductId ${idProduct} does not exist` });
-
-    const productFound = await contenedor.getById(idProduct);
-    const productUpdated = {
-        ...productFound.payload,
-        ...body,
-    }
-    
-    const productsUpdated = products.payload.map( product => {
-        if (product.id === idProduct) {
-            return productUpdated;
-        }else {
-            return product;
-        }
-    })
-    const {status} = await contenedor.saveProducts(productsUpdated);
-    res.send({
-        status,
-        message: `Producto with id ${idProduct} was updated successfully`,
-        productUpdated
-    })
+    const result = await contenedor.updateProduct(idProduct, body);
+    res.status(result.status === "success" ? 200 : 400).json(result)
 }
 
 const deleteProduct = async (req, res) => {
-    const idProduct = parseInt(req.params.id);
-    const products = await contenedor.getAll();
-    
-    //Buscar si existe el id a eliminar 
-    const existId = products.payload.some(product => product.id === idProduct);
-    if (!existId) return res.status(400).send({status: 'error',  message : `ProductId ${idProduct} does not exist for Deleted`});
-
+    const idProduct = req.params.id;
+   
     //Procedemos a eliminar el producto
-    const message = await contenedor.deleteById(idProduct);
-    res.send(message)
+    const result = await contenedor.deleteById(idProduct);
+    res.status(result.status === "success" ? 200 : 400).json(result)
 }
 
-const postProductRandom = async (req, res) => {
-    const { payload } = await contenedor.getAll();
+const deleteAllProduct = async (req, res) => {
 
-    const quantityProducts = payload.length;
-    const random = Math.floor((Math.random() * quantityProducts));
-    res.send(payload[random])
+    //Procedemos a eliminar todos los  producto
+    const result = await contenedor.deleteAll();
+    res.status(result.status === "success" ? 200 : 400).json(result)
 }
 
-
-
-
-
-module.exports = {
+export {
     getProducts,
     getProductById,
     postProduct,
     putProduct,
     deleteProduct,
-    postProductRandom
+    deleteAllProduct
 }
