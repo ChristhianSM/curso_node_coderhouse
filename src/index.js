@@ -16,9 +16,9 @@ app.use(express.urlencoded({extended:true})) //Middleware para leer queries del 
 app.use(express.json()) //Middleware para leer archivos JSON
 app.use(express.static(path.join(__dirname + '/public'))) //Middleware para crear un espacio estatico
 
-// app.engine('handlebars', handlebars.engine());
-// app.set('views', __dirname+'/views');
-// app.set('view engine', 'handlebars');
+app.engine('handlebars', handlebars.engine());
+app.set('views', __dirname+'/views');
+app.set('view engine', 'handlebars');
 
 //Rutas 
 app.use('/api/products', productsRouter)

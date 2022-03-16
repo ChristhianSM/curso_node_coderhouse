@@ -9,9 +9,9 @@ import {
     deleteProduct,
     deleteAllProduct} from '../controllers/products.controller.js'
     
-import { existIdProduct } from '../helpers/db-validator.js';
-import { middlewareAuth } from '../middlewares/middlewaresProducts.js';
-import  { validateInputs } from '../middlewares/validateInputs.js';
+    import { existIdProduct } from '../helpers/db-validator.js';
+    import { middlewareAuth } from '../middlewares/middlewaresProducts.js';
+    import  { validateInputs } from '../middlewares/validateInputs.js';
 
 import  uploader from '../services/Upload.js';
 const router = express.Router();
@@ -62,9 +62,7 @@ router.delete('/:id' ,[
     check('id').custom(existIdProduct),
 ],  deleteProduct);
 
-router.delete('/all', [
-    middlewareAuth
-], deleteAllProduct)
+router.delete('/all', deleteAllProduct)
 
 
 

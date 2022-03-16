@@ -1,4 +1,3 @@
-
 import fs from 'fs';
 import { __dirname } from '../helpers/getDirname.js'
 

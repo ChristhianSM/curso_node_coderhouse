@@ -1,281 +1,167 @@
-import path from 'path'
-import  fs from 'fs';
-
+import knex from 'knex';
 import  { v4 as uuidv4 } from 'uuid';
-import { __dirname } from '../helpers/getDirname.js'
-
-const pathFile = path.join(__dirname + '/../files/cart.txt');
-const pathFileProducts = path.join(__dirname + '/../files/products.txt');
-
-const getFetch = async () => {
-    try {
-        return JSON.parse(await fs.promises.readFile(pathFile, 'utf-8'));
-    } catch (error) {
-        return {
-            status : 'Error',
-            message : error
-        }
-    }
-    
-}
 
 class ContainerCart {
+    constructor (options, nameTable) {
+        this.options = options;
+        this.nameTable = nameTable;
 
-    async getCarts() {
-        if (fs.existsSync(pathFile)) {
-            try {
-                const carts = JSON.parse(await fs.promises.readFile(pathFile, 'utf-8'));
-                return {
-                    status : 'success',
-                    message : 'Cart add Correctly',
-                    payload : carts
-                }
-            } catch (error) {
-                return {
-                    status : 'error',
-                    message : error
-                }
-            }   
-        }
-        return {
-            status : 'error',
-            message : 'File not exist'
-        }
+        this.database = this.connection();
+    }
+
+    connection() {
+        return knex(this.options);
     }
 
     async createCart() {
-        if (fs.existsSync(pathFile)) {
-            const carts = JSON.parse(await fs.promises.readFile(pathFile, 'utf-8')) || "";
-
-            //Verificamos que el archivo contenga carts
-            if (!carts) {
-                const newCart = {
-                    // id: uuidv4(), 
-                    id: 1, 
-                    timestamp : Date.now(),
-                    products : []
-                }
-                try {
-                    await fs.promises.writeFile(pathFile, JSON.stringify([newCart], null, 2));
-                    return {
-                        status : 'success',
-                        message : 'Cart add Correctly',
-                        payload : newCart
-                    }
-                } catch (error) {
-                    return {
-                        status : 'error',
-                        message : error
-                    }
-                }
-            }
-
-            if (carts.length > 0) {
-                //obtenemos el ultimo id 
-                const lastId = carts[carts.length - 1].id + 1;
-                const cart = {
-                    id : lastId,
-                    timestamp : Date.now(),
-                    products : []
-                }
-                carts.push(cart);
-                try {
-                    await fs.promises.writeFile(pathFile, JSON.stringify(carts, null, 2));
-                    return {
-                        status : 'success',
-                        message : 'Cart add Correctly',
-                        payload : cart
-                    }
-                } catch (error) {
-                    return {
-                        status : 'error',
-                        message : error
-                    }
-                }
-            }
-        }
         const newCart = {
-            // id: uuidv4(), 
-            id: 1, 
+            id_cart : uuidv4(),
             timestamp : Date.now(),
-            products : []
+            amount: 0,
         }
         try {
-            await fs.promises.writeFile(pathFile, JSON.stringify([newCart], null, 2));
+            await this.database.from(this.nameTable).insert(newCart);
             return {
-                status : 'success',
-                message : 'Cart add Correctly',
+                status : "success",
+                message : 'Cart created correctly',
                 payload : newCart
             }
         } catch (error) {
             return {
-                status : 'error',
-                message : error
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
             }
         }
     }
 
+    async getCart() {
+        
+    }
+
     async deleteCart(id) {
-        if (fs.existsSync(pathFile)) {
-            const carts = JSON.parse(await fs.promises.readFile(pathFile, 'utf-8'));
-            
-            //Verificamos si existe el id del carrito para eliminarlo 
-            const idExist = carts.some( cart => cart.id === id);
-            console.log(id)
-            if (idExist) {
-                const newsCarts = carts.filter( cart => cart.id !== id);
-                try {
-                    await fs.promises.writeFile(pathFile, JSON.stringify(newsCarts, null, 2));
-                    return {
-                        status : 'success',
-                        message : 'Cart Delete Correctly'
-                    }
-                } catch (error) {
-                    return {
-                        status : 'success',
-                        message : error
-                    }
-                }  
-            }else{
-                return {
-                    status : 'Error',
-                    message : 'Cart not found'
-                }
+        try {
+            await this.database.from(this.nameTable).where('id_cart', id).update({status:false});
+            return {
+                status : "success",
+                message : 'Cart deleted correctly'
             }
-        }
-        return {
-            status : 'Error',
-            message : 'File not found'
+        } catch (error) {
+            return {
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
+            }
         }
     }
 
     async getProductsForCart(id) {
-        if (fs.existsSync(pathFile)) {
-            const carts = await getFetch();
-            
-            //Verificamos si existe el id del carrito para obtener sus productos
-            const idExist = carts.some( cart => cart.id === id);
+        try {
+            const results = await this.database.from('carts_products').select('id_product','amount').where('id_cart', id);
+            const products = JSON.parse(JSON.stringify(results));
 
-            if (idExist) {
-                const products = carts.find( cart => cart.id === id);
+            //Guardamos solo los id de los productos 
+            const arrayIdProducts = products.map( product => product.id_product);
+
+            const resultsProducts = await this.database.from('products')
+                                                        .select('name', 'price', 'image', 'description')
+                                                        .whereIn('id_product',arrayIdProducts);
+            const resultsProductsFormated = JSON.parse(JSON.stringify(resultsProducts));
+
+            //Agregamos el amount de cada producto 
+            const arrayProductsShow = resultsProductsFormated.map( (product, index) => {
                 return {
-                    status : 'success',
-                    message : `Cart ${id} products obtained successfully`,
-                    payload : products.products
+                    ...product,
+                    amount : products[index].amount
                 }
-            }else{
-                return {
-                    status : 'Error',
-                    message : 'Cart not found'
-                }
+            })
+
+            console.log(arrayProductsShow)
+
+            return {
+                status : "success",
+                message : 'Products Obtenidos correctly',
+                payload: arrayProductsShow
             }
-        }
-        return {
-            status : 'Error',
-            message : 'File not found'
+        } catch (error) {
+            return {
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
+            }
         }
     }
 
     async addProductToCart ( id, idProduct ) {
-        if (fs.existsSync(pathFile)) {
-            const carts = await getFetch();
-            
-            //Verificamos si existe el id del carrito para agregar el producto 
-            const idExist = carts.some( cart => cart.id === id);
-
-            //Verificamos si el producto esta en mi base de datos
-            const products = JSON.parse(await fs.promises.readFile(pathFileProducts, 'utf-8'));
-
-            const idExistProduct = products.some( product => product.id === idProduct);
-            let currentCart = [];
-
-            if (idExist && idExistProduct) {
-                const cartsUpdated = carts.map( cart => {
-                    if (cart.id === id) {
-                        cart.products.push(idProduct);
-                        currentCart = cart;
-                        return cart
-                    }else{
-                        return cart
-                    }
-                })
-                
-                try {
-                    await fs.promises.writeFile(pathFile, JSON.stringify(cartsUpdated, null, 2));
-                    return {
-                        status : 'success',
-                        message : 'Cart Added Correctly',
-                        payload : currentCart
-                    }
-                } catch (error) {
-                    return {
-                        status : 'success',
-                        message : error
-                    }
-                }  
-            }else{
+        try {
+            //Verificamos si el producto existe en el carrito de compras, para aumentarle la cantidad
+            const resultAmount = await this.database.from('carts_products').select('amount').where({'id_cart' :id , 'id_product': idProduct});
+            let amount = JSON.parse(JSON.stringify(resultAmount));
+            if (amount.length === 0) {
+                const results = await this.database.from('carts_products').insert({id_cart: id, id_product: idProduct, amount: 1});
                 return {
-                    status : 'Error',
-                    message : 'Cart not found or Product not found'
+                    status : "success",
+                    message : 'Product added correctly'
                 }
             }
-        }
-        return {
-            status : 'Error',
-            message : 'File not found'
+            amount = amount[0].amount + 1;
+            const results = await this.database.from('carts_products').where({id_cart: id, id_product: idProduct})
+            .update({amount})
+            return {
+                status : "success",
+                message : 'Amount Product updated correctly'
+            }
+        } catch (error) {
+            return {
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
+            }
         }
     }
 
     async deleteProductToCart ( id, idProduct ) {
-        if (fs.existsSync(pathFile)) {
-            const carts = await getFetch();
-            
-            //Verificamos si existe el id del carrito para agregar el producto 
-            const idExist = carts.some( cart => cart.id === id);
-            if (!idExist) {
+        try {
+            const resultAmount = await this.database.from('carts_products').select('amount').where({'id_cart' :id , 'id_product': idProduct});
+            let amount = JSON.parse(JSON.stringify(resultAmount));
+            if (amount[0].amount === 1) {
+                await this.database.from('carts_products').where({id_cart: id, id_product: idProduct}).del();
                 return {
-                    status : 'success',
-                    message : 'CartId Not Exist'
+                    status : "success",
+                    message : 'Product Deleted Correctly'
                 }
             }
 
-            //Verificamos si exite el id del producto a eliminar
-            const cartFound = carts.find( cart => cart.id === id);
-            
-            const idProductExist = cartFound.products.some( product => product === idProduct);
-
-            if (idExist && idProductExist) {
-                const cartsUpdated = carts.map( cart => {
-                    if (cart.id === id) {
-                        cart.products =  cart.products.filter( product => product !== idProduct);
-                        return cart
-                    }else{
-                        return cart
-                    }
-                })
-                try {
-                    await fs.promises.writeFile(pathFile, JSON.stringify(cartsUpdated, null, 2));
-                    return {
-                        status : 'success',
-                        message : 'Product Delete Correctly',
-                        payload : cartsUpdated
-                    }
-                } catch (error) {
-                    return {
-                        status : 'success',
-                        message : error
-                    }
-                }  
-            }else{
+            if (amount[0].amount !== 0) {
+                amount = amount[0].amount - 1
+                const results = await this.database.from('carts_products').where({id_cart: id, id_product: idProduct}).update({amount})
                 return {
-                    status : 'Error',
-                    message : 'Cart not found or Product not Found'
+                    status : "success",
+                    message : 'Cantidad reducida'
                 }
+            }
+        } catch (error) {
+            return {
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
             }
         }
-        return {
-            status : 'Error',
-            message : 'File not found'
+    }
+
+    async deleteProduct ( id, idProduct ) {
+        try {
+            await this.database.from('carts_products').where({id_cart: id, id_product: idProduct}).del();
+            return {
+                status : "success",
+                message : 'Product Deleted Correctly'
+            }
+        } catch (error) {
+            return {
+                status : "error",
+                message : 'Ocurrio un problema con la BD',
+                error
+            }
         }
     }
 }

@@ -21,7 +21,7 @@ class  Contenedor {
             //Mostramos solo los productos que estan activos
             const [results, resultTotal] = await Promise.all([
                 database.from(this.nameTable).select("*").where('status', true).limit(limit),
-                database.count('id').from(this.nameTable).where('status', true)
+                database.count('id_product').from(this.nameTable).where('status', true)
             ])
             const products = JSON.parse(JSON.stringify(results));
             const total = JSON.parse(JSON.stringify(resultTotal));
@@ -57,7 +57,7 @@ class  Contenedor {
     async getById(id) {
         try {
             const database = knex(this.options);
-            const results = await database.from("products").select('*').where('id', id);
+            const results = await database.from("products").select('*').where('id_product', id);
             const products = JSON.parse(JSON.stringify(results))
             return {
                 status : "success",

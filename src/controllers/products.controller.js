@@ -12,11 +12,10 @@ const getProducts = async (req=request, res=response) => {
 
     const result = await contenedor.getAll(parseInt(limit));
     res.status(result.status === "success" ? 200 : 400).json(result)
-
-
-    // res.render('products' , {
+    
+    // res.render('/' , {
     //     name : 'Christhian',
-    //     products: products.payload
+    //     products: result.payload
     // })
 }
 
