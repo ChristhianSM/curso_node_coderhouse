@@ -8,9 +8,9 @@ const contenedor = new Contenedor(options, 'products');
 const getProducts = async (req=request, res=response) => {
 
     //Leer los queries para obtener productos por limites
-    const { limit = 10 , from = 0} = req.query
+    const { page = 10 , from = 0} = req.query
 
-    const result = await contenedor.getAll(parseInt(limit));
+    const result = await contenedor.getAll(parseInt(page));
     res.status(result.status === "success" ? 200 : 400).json(result)
     
     // res.render('/' , {
@@ -44,7 +44,7 @@ const putProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
     const idProduct = req.params.id;
-   
+    
     //Procedemos a eliminar el producto
     const result = await contenedor.deleteById(idProduct);
     res.status(result.status === "success" ? 200 : 400).json(result)

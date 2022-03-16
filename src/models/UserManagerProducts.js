@@ -29,17 +29,14 @@ class  Contenedor {
             
             //Eliminamos los campos que no deberian mostrarse al usuario
             products.forEach( product => {
-                delete product.id;
-                delete product.id_product;
                 delete product.status;
                 delete product.timestamp;
             })
-
             return {
                 status : "success",
                 message : 'Products obtained correctly',
                 payload : {
-                    total : total[0]['count(`id`)'],
+                    total : total[0]['count(`id_product`)'],
                     totalProductsShow,
                     products
                 }

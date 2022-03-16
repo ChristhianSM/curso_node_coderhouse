@@ -4,12 +4,13 @@ const socket = io();
 const btnAddProduct = document.querySelector('.btn-add-product');
 const nameProduct = document.querySelector('.name-product');
 const priceProduct = document.querySelector('.price-product');
+const description = document.querySelector('.description-product');
+const stock = document.querySelector('.stock-product');
 const fileProduct = document.querySelector('.file-product');
 
 const messageName = document.querySelector('.message-error-name');
 const messagePrecio = document.querySelector('.message-error-price');
 const messageError = document.querySelector('.message-error');
-
 
 const tableProducts = document.querySelector('.table-products');
 
@@ -17,7 +18,12 @@ validateInputs();
 btnAddProduct.addEventListener('click', validateForm);
 
 function validateForm() {
-    if (!nameProduct.value.trim() || !priceProduct.value.trim() || !fileProduct.value) {
+    if (!nameProduct.value.trim() 
+        || !priceProduct.value.trim() 
+        || !description.value.trim() 
+        || !stock.value.trim() 
+        || !fileProduct.value
+        ) {
         messageError.textContent = "Los campos son obligatorios";
         messageError.classList.remove('hidden')
         setTimeout(() => {
@@ -33,7 +39,9 @@ function validateForm() {
 
     const product = {
         name : nameProduct.value,
-        price : priceProduct.value
+        price : priceProduct.value,
+        description : description.value,
+        stock : stock.value,
     }
 
     socket.emit('sendProduct', product)
@@ -49,7 +57,7 @@ socket.on('products', async (products) => {
     
     const processedtemplate = Handlebars.compile(data);
     const html = processedtemplate({products})
-    tableProducts.innerHTML = html
+    tableProducts.innerHTML = html;
 })
 
 async function sendData(formData) {
@@ -94,4 +102,14 @@ function clearInputs () {
     document.querySelector('.name-product').value = "";
     document.querySelector('.price-product').value= "";
     document.querySelector('.file-product').value= "";
+}
+
+async function deleteProduct(idProduct) {
+    const response = await fetch(`https://cursonodecoderhouse.herokuapp.com/api/products/${idProduct}`, {
+        method: 'DELETE'
+    });
+    const result = await response.json();
+
+    //Socket para emitir 
+    socket.emit('deleteProduct', result);
 }

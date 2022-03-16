@@ -1,5 +1,4 @@
 import express from 'express';
-import path from 'path'
 import {Server as SocketIO} from 'socket.io'
 import handlebars from 'express-handlebars'
 
@@ -8,17 +7,25 @@ import cartRouter from './routers/cart.router.js';
 
 import { Contenedor } from'./models/UserManagerProducts.js';
 import Message  from'./models/UserManagerChat.js';
-import { __dirname } from './helpers/getDirname.js'
+
+import { fileURLToPath } from 'url'
+import path, { dirname } from 'path'
+import options from './database/mysql/options/mysqlconfig.js';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 
 app.use(express.urlencoded({extended:true})) //Middleware para leer queries del url
 app.use(express.json()) //Middleware para leer archivos JSON
+console.log(__dirname + '/public')
 app.use(express.static(path.join(__dirname + '/public'))) //Middleware para crear un espacio estatico
 
-app.engine('handlebars', handlebars.engine());
-app.set('views', __dirname+'/views');
-app.set('view engine', 'handlebars');
+// app.engine('handlebars', handlebars.engine());
+// app.set('views', __dirname+'/views');
+// app.set('view engine', 'handlebars');
 
 //Rutas 
 app.use('/api/products', productsRouter)
@@ -36,7 +43,7 @@ server.on("error", error => console.log(`Error en servidor ${error}`))
 
 
 //Instanciamos la clase Contenedor 
-const contenedor = new Contenedor(path.join(__dirname + '/files/products.txt'));
+const contenedor = new Contenedor(options, "products");
 
 //Sockets
 const chat = new Message(path.join(__dirname + '/files/messages.txt'));
@@ -44,8 +51,8 @@ const chat = new Message(path.join(__dirname + '/files/messages.txt'));
 const io = new SocketIO(server);
 io.on('connection', async (socket) => {
     //Para mostrar los productos apenas inicie 
-    const products = await contenedor.getAll();
-    io.emit('products' ,products.payload)
+    const results = await contenedor.getAll();
+    io.emit('products' ,results.payload.products)
 
     //Para mostrar los mensajes apenas inicie
     const messages = await chat.getAll(); 
@@ -63,8 +70,8 @@ io.on('connection', async (socket) => {
 
     socket.on('sendProduct', async (data) => {
         await contenedor.save(data);
-        const products = await contenedor.getAll();
-        io.emit('products' ,products.payload)
+        const results = await contenedor.getAll();
+        io.emit('products' , results.payload.products)
     })
 
     socket.on('message', async (data) => {
@@ -72,5 +79,10 @@ io.on('connection', async (socket) => {
         const messages = await chat.getAll();
 
         io.emit('data-messages', messages.payload);
+    })
+
+    socket.on('deleteProduct', async (data) => {
+        const results = await contenedor.getAll();
+        io.emit('products' ,results.payload.products)
     })
 })

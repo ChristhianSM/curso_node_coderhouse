@@ -4,7 +4,7 @@
             <td class="px-5 border-b border-gray-200 bg-white text-sm">
                 <div class="flex items-center">
                     <div>
-                        {{this.id}}
+                        {{@index}}
                     </div>
                 </div>
             </td>
@@ -17,15 +17,22 @@
                 </p>
             </td>
             <td class="px-5 border-b border-gray-200 bg-white text-sm">
-                <img src="{{this.thumbnail}}" alt="" height="70" width="70">
+                <img src="{{this.image}}" alt="" height="70" width="70">
+            </td>
+            <td class="px-5 border-b border-gray-200 bg-white text-sm">
+                <button class="btn-editar mr-3" id={{this.id_product}} > 
+                    <img src="../img/editar.png" alt="" width="30" height="30">
+                </button>
+                <button class="btn-eliminar" id={{this.id_product}} onclick="deleteProduct('{{this.id_product}}')"> 
+                    <img src="../img/eliminar.png" alt="" width="30" height="30">
+                </button>
             </td>
         </tr>
     {{/each}}
 {{else}}
     <tr>
-        <td colspan="4" class="text-center p-20">
+        <td colspan="5" class="text-center p-20">
             <p class="mb-8">No hay productos para mostrar</p>
-            <a href="/" class="mt-4 w-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-indigo-100 p-2 rounded-md text-lg tracking-wide btn-add-product">Agregar Productos</a>
         </td>
     </tr>
 {{/if}}
