@@ -1,142 +1,92 @@
-import fs from 'fs';
-import { __dirname } from '../helpers/getDirname.js'
+import { v4 as uuidv4 } from 'uuid';
+import knex from 'knex';
 
 class Chat {
 
-    constructor(pathFile) {
-        this.pathFile = pathFile;
-        this.pathFileUser = __dirname + '/../files/user.txt';
+    constructor(options, nameTableMessages, nameTableUsers) {
+        this.options = options;
+        this.nameTableMessages = nameTableMessages;
+        this.nameTableUsers = nameTableUsers;
+
+        this.database = this.connection();
     }
 
-    async save(message) {
-    
-        try {
-            //Verificamos que exista el documento
-            if (fs.existsSync(this.pathFile)) {
-                const data = (await fs.promises.readFile(this.pathFile, "utf-8"));
-
-                //Verificamos si el archivo contiene productos, por que unicamente puede estar creado pero sin productos 
-                if (data !== "" && JSON.parse(data).length > 0) {
-                    const messages = JSON.parse(data);
-                    messages.push(message);
-                    await fs.promises.writeFile(this.pathFile, JSON.stringify(messages, null, 2));
-                    return {
-                        status : "Success",
-                        message : "Message saved successfully"
-                    }
-                }
-            }
-
-            await fs.promises.writeFile(this.pathFile, JSON.stringify([message], null, 2));
-            return {
-                status : "Success",
-                message : "Message saved successfully"
-            }
-            
-        } catch (error) {
-            return {
-                status : "Error",
-                message : error
-            }
-        }
-    }
-
-    async getAll() {
-        try {
-            if (fs.existsSync(this.pathFile)) {
-                const messages = JSON.parse(await fs.promises.readFile(this.pathFile, "utf-8"));
-                return {
-                    status: 'success',
-                    mensaje : "Messages obtained correctly",
-                    payload : messages
-                };  
-            }else{
-                await fs.promises.writeFile(this.pathFile, JSON.stringify([], null, 2));
-                return {
-                    status: "success",
-                    mensaje : "Messages obtained correctly",
-                    payload : []
-                };
-            }
-        } catch (error) {
-            return {
-                status : "Error",
-                message : error
-            }
-        }
+    connection() {
+        return knex(this.options);
     }
 
     async saveUsers(user){
+        const newUser = {
+            id_user : uuidv4(),
+            ...user
+        }
         try {
-            //Verificamos que exista el documento
-            if (fs.existsSync(this.pathFileUser)) {
-                const data = (await fs.promises.readFile(this.pathFileUser, "utf-8"));
-
-                //Verificamos si el archivo contiene usuarios, por que unicamente puede estar creado pero sin usuarios 
-                if (data !== "" && JSON.parse(data).length > 0) {
-                    const users = JSON.parse(data);
-                    const userExist = users.some(item => item.email === user.email);
-                    if (userExist) {
-                        const usersUpdated = users.map(item => {
-                            if (item.email === user.email) {
-                                item.user = user.user
-                                return item
-                            }
-                            return item
-                        });
-                        await fs.promises.writeFile(this.pathFileUser, JSON.stringify(usersUpdated, null, 2));
-                        return {
-                            status : "Success",
-                            message : "User saved successfully"
-                        }
-                    }
-                    users.push(user);
-                    await fs.promises.writeFile(this.pathFileUser, JSON.stringify(users, null, 2));
-                    return {
-                        status : "Success",
-                        message : "User saved successfully"
-                    }
-                }
-            }
-
-            await fs.promises.writeFile(this.pathFileUser, JSON.stringify([user], null, 2));
+            await this.database.from('users').insert(newUser);
             return {
-                status : "Success",
-                message : "User saved successfully"
+                status : "success",
+                message : 'User added correctly'
             }
-            
+
         } catch (error) {
             return {
-                status : "Error",
-                message : error
-            }
+                status : "error",
+                message : 'Ocurrio un error en la BD',
+                error
+            } 
         }
+        
     }
 
     async getAllUsers() {
         try {
-            if (fs.existsSync(this.pathFileUser)) {
-                const users = JSON.parse(await fs.promises.readFile(this.pathFileUser, "utf-8"));
-                return {
-                    status: 'success',
-                    mensaje : "Messages obtained correctly",
-                    payload : users
-                };  
-            }else{
-                await fs.promises.writeFile(this.pathFileUser, JSON.stringify([], null, 2));
-                return {
-                    status: "success",
-                    mensaje : "Messages obtained correctly",
-                    payload : []
-                };
+            const results = await this.database.from(this.nameTableUsers).select('*');
+            return {
+                status : "success",
+                message : 'Users obtenly correctly',
+                results
             }
         } catch (error) {
             return {
-                status : "Error",
-                message : error
-            }
+                status : "error",
+                message : 'Ocurrio un error en la BD',
+                error
+            } 
         }
     }
+
+    async save(message) {
+        try {
+            await this.database.from("messages").insert(message);
+            return {
+                status : "success",
+                message : 'Message added correctly'
+            } 
+        } catch (error) {
+            return {
+                status : "error",
+                message : 'Ocurrio un error en la BD',
+                error
+            } 
+        }
+    }
+
+    async getAllMessages() {
+        try {
+            let results = await this.database.from(this.nameTableMessages).select('*');
+            return {
+                status : "success",
+                message : 'Users obtenly correctly',
+                results
+            }
+        } catch (error) {
+            return {
+                status : "error",
+                message : 'Ocurrio un error en la BD',
+                error
+            } 
+        }
+    }
+
 }
 
 export default Chat

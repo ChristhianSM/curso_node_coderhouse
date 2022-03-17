@@ -7,10 +7,11 @@ class  Contenedor {
         this.options = options;
         this.nameTable = nameTable;
 
+
         // this.createTable();
     }
 
-    // async createTable () {
+    // createTable () {
     //     proccessInitialDatabase();
     // }
 

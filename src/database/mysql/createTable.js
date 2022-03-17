@@ -5,16 +5,17 @@ import options from './options/mysqlconfig.js'
 const database = knex(options);
 
 const proccessInitialDatabase = async() => {
+    const existTableCartsProducts = await database.schema.hasTable('carts_products');
+    if (existTableCartsProducts) {
+        await database.schema.dropTable('carts_products');
+    }
     const existTableProducts = await database.schema.hasTable('products');
     if (existTableProducts) {
         await database.schema.dropTable('products');
     }
-
-    const existTableCartsProducts = await database.schema.hasTable('carts_products');
-    if (existTableCartsProducts) {
-        await database.schema.dropTable('carts_products');
+    const existTableCarts = await database.schema.hasTable('carts');
+    if (existTableCarts) {
         await database.schema.dropTable('carts');
-        await database.schema.dropTable('products');
     }
 
     await database.schema.createTable('products', table => {
@@ -28,11 +29,6 @@ const proccessInitialDatabase = async() => {
         table.boolean('status').nullable(false).defaultTo(true);
         table.double('timestamp').nullable(false);
     });
-
-    const existTableCarts = await database.schema.hasTable('carts');
-    if (existTableCarts) {
-        await database.schema.dropTable('carts');
-    }
 
     await database.schema.createTable('carts', table => {
         table.string('id_cart', 40).primary();
@@ -53,3 +49,7 @@ const proccessInitialDatabase = async() => {
 }
 
 proccessInitialDatabase();
+
+export {
+    proccessInitialDatabase
+}

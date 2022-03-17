@@ -98,7 +98,7 @@ class ContainerCart {
             const resultAmount = await this.database.from('carts_products').select('amount').where({'id_cart' :id , 'id_product': idProduct});
             let amount = JSON.parse(JSON.stringify(resultAmount));
             if (amount.length === 0) {
-                const results = await this.database.from('carts_products').insert({id_cart: id, id_product: idProduct, amount: 1});
+                await this.database.from('carts_products').insert({id_cart: id, id_product: idProduct, amount: 1});
                 return {
                     status : "success",
                     message : 'Product added correctly'

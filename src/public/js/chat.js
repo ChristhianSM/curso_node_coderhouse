@@ -21,7 +21,7 @@ formChat.addEventListener('submit' , (e) => {
     const date = `${hours === 0 ? 12 : hours}:${hoy.getMinutes()} ${hours >= 12 ? 'PM' : 'AM'}`;
 
     const objMessage = {
-        id : socketChat.id,
+        id_message : socketChat.id,
         message : messageChat.value.trim(),
         timestamp : date,
         user
@@ -32,7 +32,6 @@ formChat.addEventListener('submit' , (e) => {
 })
 
 socketChat.on('users-login', async users => {
-
     const response = await fetch('./templates/users-chat.handlebars');
     const data = await response.text();
 
