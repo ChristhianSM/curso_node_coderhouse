@@ -1,22 +1,23 @@
-import { v4 as uuidv4 } from 'uuid';
 import { dbConnection } from '../database/mongo/config.database.js';
+import { v4 as uuidv4 } from 'uuid';
 import Product from '../models/product.js'
 
-class  Contenedor {
+class  Container {
     constructor( nameTable){
         this.nameTable = nameTable;
-        // this.connectionDB();
+        this.connectionDB();
     }
 
-    // connectionDB () {
-    //     dbConnection();
-    // }
+    connectionDB () {
+        dbConnection();
+    }
 
     async getAll(limit) {
         try {
             //Mostramos solo los productos que estan activos
             const [total, products] = await Promise.all([
-                Product.count
+                Product.countDocuments({status: true}),
+                Product.find({status: true})
             ])
             
             //Eliminamos los campos que no deberian mostrarse al usuario
@@ -28,8 +29,7 @@ class  Contenedor {
                 status : "success",
                 message : 'Products obtained correctly',
                 payload : {
-                    total : total[0]['count(`id_product`)'],
-                    totalProductsShow,
+                    total,
                     products
                 }
             }
@@ -45,13 +45,11 @@ class  Contenedor {
 
     async getById(id) {
         try {
-            const database = knex(this.options);
-            const results = await database.from("products").select('*').where('id_product', id);
-            const products = JSON.parse(JSON.stringify(results))
+            const product = await Product.findById(id);
             return {
                 status : "success",
                 message : 'Products obtained correctly',
-                payload : products
+                payload : product
             }
         } catch (error) {
             return {
@@ -64,21 +62,23 @@ class  Contenedor {
 
     async save(product) {
         const newProduct = {
-            id_product: uuidv4(),
             code : uuidv4(),
             ...product,
             timestamp : Date.now(),
         }
 
         try {
-            const database = knex(this.options);
-            await database.from(this.nameTable).insert(newProduct);
+            const productCreated = new Product( newProduct ); 
+            await productCreated.save();
+
             return {
                 status : "success",
                 message : 'Products saved correctly',
                 payload : newProduct
             }
         } catch (error) {
+            
+            console.log(error)
             return {
                 status : "error",
                 message : 'Ocurrio un problema con la BD',
@@ -89,8 +89,7 @@ class  Contenedor {
 
     async updateProduct ( id, data ) {
         try {
-            const database = knex(this.options);
-            await database.from(this.nameTable).where('id_product', id).update(data);
+            await Product.findByIdAndUpdate(id, data);
             return {
                 status : "success",
                 message : 'Products Updated correctly'
@@ -105,8 +104,8 @@ class  Contenedor {
     }
     async deleteById (id) {
         try {
-            const database = knex(this.options);
-            await database.from(this.nameTable).where('id_product', id).update({status: false});
+            //Cambiamos el estado del producto, eliminacion logica 
+            await Product.findByIdAndUpdate(id, {status: false});
             return {
                 status : "success",
                 message : 'Products Deleted correctly'
@@ -122,9 +121,11 @@ class  Contenedor {
 
     async deleteAll () {
         try {
-            const database = knex(this.options);
-            await database.from(this.nameTable).del();
-            
+            await Product.updateMany({status: false});
+            return {
+                status : "success",
+                message : 'Products Deleteded correctly'
+            }
         } catch (error) {
             return {
                 status : "error",
@@ -135,6 +136,4 @@ class  Contenedor {
     }
 }
 
-export {
-    Contenedor
-}
+export default Container

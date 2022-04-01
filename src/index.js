@@ -1,4 +1,5 @@
 import express from 'express';
+import dotenv from 'dotenv';
 import {Server as SocketIO} from 'socket.io'
 import handlebars from 'express-handlebars'
 
@@ -12,6 +13,9 @@ import { fileURLToPath } from 'url'
 import path, { dirname } from 'path'
 import options from './database/mysql/options/mysqlconfig.js';
 import optionsSqlite3 from './database/mysqlite3/options/slqiteconfig.js';
+
+//Para leer variables de entorno
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -27,6 +31,7 @@ app.use(express.static(path.join(__dirname + '/public'))) //Middleware para crea
 // app.set('views', __dirname+'/views');
 // app.set('view engine', 'handlebars');
 
+
 //Rutas 
 app.use('/api/products', productsRouter)
 app.use('/api/cart', cartRouter)
@@ -40,7 +45,6 @@ const server = app.listen(app.get('port'), () => {
 })
 
 server.on("error", error => console.log(`Error en servidor ${error}`))
-
 
 //Instanciamos la clase Contenedor 
 const contenedor = new Contenedor(options, "products");

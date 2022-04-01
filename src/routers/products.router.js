@@ -25,7 +25,8 @@ router.get('/', [
 
 //Get Product by Id
 router.get('/:id', [
-    check('id', 'ID Product is requerid').not().isEmpty().isNumeric().withMessage('Must be a numeric value'),
+    // check('id', 'ID Product is requerid').not().isEmpty().isMongoId().withMessage("Id incorrect"),
+    check('id', 'ID Product is requerid').not().isEmpty(),
     validateInputs,
 ] ,
 getProductById)
@@ -46,7 +47,8 @@ router.post('/', [
 //Updated Product
 router.put('/:id',[
     middlewareAuth,
-    check('id').custom(existIdProduct),
+    // check('id').custom(existIdProduct),
+    check('id', 'ID Product is requerid').not().isEmpty(),
     check('name', 'Name is requerid').optional().not().isEmpty(),
     check('price', 'Price is requerid').optional().isNumeric().withMessage('Price Must be a numeric value'),
     check('image', 'Image is requerid').optional(),
@@ -56,14 +58,14 @@ router.put('/:id',[
 ]
 , putProduct)
 
+//Deleted All Products
+router.delete('/all', deleteAllProduct)
+
 //Delete Product by id 
 router.delete('/:id' ,[
     middlewareAuth,
-    check('id').custom(existIdProduct),
+    // check('id').custom(existIdProduct),
+    check('id', 'ID Product is requerid').not().isEmpty(),
 ],  deleteProduct);
-
-router.delete('/all', deleteAllProduct)
-
-
 
 export default router;
