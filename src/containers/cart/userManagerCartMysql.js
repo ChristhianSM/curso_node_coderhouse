@@ -1,28 +1,26 @@
 import  { v4 as uuidv4 } from 'uuid';
-import { dbConnection } from '../database/mongo/config.database.js';
-import Cart from '../models/Cart.js';
+import { database } from '../../database/mysql/config.database.js';
 
-class ContainerCart {
+class Container {
     constructor (options, nameTable) {
         this.options = options;
         this.nameTable = nameTable;
 
-        this.connectionDB();
+        this.database = this.connection();
     }
 
-    connectionDB () {
-        dbConnection();
+    connection() {
+        return database;
     }
 
     async createCart() {
         const newCart = {
+            id_cart : uuidv4(),
             timestamp : Date.now(),
-            products: [],
+            amount: 0,
         }
         try {
-            const cartCreated = new Cart(newCart);
-            await cartCreated.save();
-
+            await this.database.from(this.nameTable).insert(newCart);
             return {
                 status : "success",
                 message : 'Cart created correctly',
@@ -38,22 +36,16 @@ class ContainerCart {
     }
 
     async getCart() {
+        
     }
 
     async deleteCart(id) {
         try {
-            const cartDeleted = await Cart.findByIdAndDelete(id);
-            if (cartDeleted) {
-                return {
-                    status : "success",
-                    message : 'Cart deleted correctly'
-                }
-            }
+            await this.database.from(this.nameTable).where('id_cart', id).update({status:false});
             return {
-                status : "error",
-                message : 'No se pudo eliminar Cart'
+                status : "success",
+                message : 'Cart deleted correctly'
             }
-            
         } catch (error) {
             return {
                 status : "error",
@@ -102,27 +94,22 @@ class ContainerCart {
 
     async addProductToCart ( id, idProduct ) {
         try {
-            //Verificar si el carrito existe
-            const cart = await Cart.findById(id);
-            if (!cart) {
-                return {
-                    status : "Error",
-                    message : 'Cart Not found'
-                }
-            }
             //Verificamos si el producto existe en el carrito de compras, para aumentarle la cantidad
-            const existProduct = cart.products.some( product => product.id_product === idProduct);
-            if (existProduct) {
-                await Cart.findOneAndUpdate({_id : id, "products.id_product": idProduct}, { $inc : {"products.$.amount": 1}});
+            const resultAmount = await this.database.from('carts_products').select('amount').where({'id_cart' :id , 'id_product': idProduct});
+            let amount = JSON.parse(JSON.stringify(resultAmount));
+            if (amount.length === 0) {
+                await this.database.from('carts_products').insert({id_cart: id, id_product: idProduct, amount: 1});
                 return {
                     status : "success",
-                    message : 'Amount Product updated correctly'
+                    message : 'Product added correctly'
                 }
             }
-            await Cart.findOneAndUpdate({_id : id}, { $addToSet : {"products" : {"id_product": idProduct, "amount": 1}}});
+            amount = amount[0].amount + 1;
+            const results = await this.database.from('carts_products').where({id_cart: id, id_product: idProduct})
+            .update({amount})
             return {
                 status : "success",
-                message : 'Product Added correctly'
+                message : 'Amount Product updated correctly'
             }
         } catch (error) {
             return {
@@ -135,26 +122,23 @@ class ContainerCart {
 
     async deleteProductToCart ( id, idProduct ) {
         try {
-            //Verificamos si el producto que existe en el carrito de compras, su cantidad es mas de 0
-            const cart = await Cart.findById(id);
-            if (!cart) {
+            const resultAmount = await this.database.from('carts_products').select('amount').where({'id_cart' :id , 'id_product': idProduct});
+            let amount = JSON.parse(JSON.stringify(resultAmount));
+            if (amount[0].amount === 1) {
+                await this.database.from('carts_products').where({id_cart: id, id_product: idProduct}).del();
                 return {
-                    status : "Error",
-                    message : 'Cart Not found'
+                    status : "success",
+                    message : 'Product Deleted Correctly'
                 }
             }
-            const product = cart.products.find( product => product.id_product === idProduct);
-            if (product.amount > 1) {
-                await Cart.findOneAndUpdate({_id : id, "products.id_product": idProduct}, { $inc : {"products.$.amount": - 1}});
+
+            if (amount[0].amount !== 0) {
+                amount = amount[0].amount - 1
+                const results = await this.database.from('carts_products').where({id_cart: id, id_product: idProduct}).update({amount})
                 return {
                     status : "success",
                     message : 'Cantidad reducida'
                 }
-            }
-            await Cart.updateOne({_id : id, "products.id_product": idProduct}, { $pull : { 'products' : { $elemMatch: { 'id_product': { $eq: idProduct } } } } });
-            return {
-                status : "success",
-                message : 'Product Deleted Correctly'
             }
         } catch (error) {
             return {
@@ -167,7 +151,7 @@ class ContainerCart {
 
     async deleteProduct ( id, idProduct ) {
         try {
-            await Cart.findOneAndDelete({_id : id, "products.id_product": idProduct});
+            await this.database.from('carts_products').where({id_cart: id, id_product: idProduct}).del();
             return {
                 status : "success",
                 message : 'Product Deleted Correctly'
@@ -182,4 +166,4 @@ class ContainerCart {
     }
 }
 
-export default ContainerCart
+export default Container

@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 import knex from 'knex';
 
 class Chat {
-
     constructor(options, nameTableMessages, nameTableUsers) {
         this.options = options;
         this.nameTableMessages = nameTableMessages;
@@ -10,7 +9,7 @@ class Chat {
 
         this.database = this.connection();
     }
-
+    
     connection() {
         return knex(this.options);
     }
@@ -28,6 +27,7 @@ class Chat {
             }
 
         } catch (error) {
+            console.log(error)
             return {
                 status : "error",
                 message : 'Ocurrio un error en la BD',
@@ -46,6 +46,7 @@ class Chat {
                 results
             }
         } catch (error) {
+            console.log(error)
             return {
                 status : "error",
                 message : 'Ocurrio un error en la BD',
@@ -62,6 +63,7 @@ class Chat {
                 message : 'Message added correctly'
             } 
         } catch (error) {
+            console.log(error)
             return {
                 status : "error",
                 message : 'Ocurrio un error en la BD',
@@ -79,6 +81,7 @@ class Chat {
                 results
             }
         } catch (error) {
+            console.log(error)
             return {
                 status : "error",
                 message : 'Ocurrio un error en la BD',

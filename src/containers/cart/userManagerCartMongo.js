@@ -1,26 +1,27 @@
-import knex from 'knex';
-import  { v4 as uuidv4 } from 'uuid';
+import { dbConnection } from '../../database/mongo/config.database.js';
+import Cart from '../../models/Cart.js';
 
 class ContainerCart {
     constructor (options, nameTable) {
         this.options = options;
         this.nameTable = nameTable;
 
-        this.database = this.connection();
+        this.connectionDB();
     }
 
-    connection() {
-        return knex(this.options);
+    connectionDB () {
+        dbConnection();
     }
 
     async createCart() {
         const newCart = {
-            id_cart : uuidv4(),
             timestamp : Date.now(),
-            amount: 0,
+            products: [],
         }
         try {
-            await this.database.from(this.nameTable).insert(newCart);
+            const cartCreated = new Cart(newCart);
+            await cartCreated.save();
+
             return {
                 status : "success",
                 message : 'Cart created correctly',
@@ -36,16 +37,22 @@ class ContainerCart {
     }
 
     async getCart() {
-        
     }
 
     async deleteCart(id) {
         try {
-            await this.database.from(this.nameTable).where('id_cart', id).update({status:false});
-            return {
-                status : "success",
-                message : 'Cart deleted correctly'
+            const cartDeleted = await Cart.findByIdAndDelete(id);
+            if (cartDeleted) {
+                return {
+                    status : "success",
+                    message : 'Cart deleted correctly'
+                }
             }
+            return {
+                status : "error",
+                message : 'No se pudo eliminar Cart'
+            }
+            
         } catch (error) {
             return {
                 status : "error",
@@ -94,22 +101,27 @@ class ContainerCart {
 
     async addProductToCart ( id, idProduct ) {
         try {
-            //Verificamos si el producto existe en el carrito de compras, para aumentarle la cantidad
-            const resultAmount = await this.database.from('carts_products').select('amount').where({'id_cart' :id , 'id_product': idProduct});
-            let amount = JSON.parse(JSON.stringify(resultAmount));
-            if (amount.length === 0) {
-                await this.database.from('carts_products').insert({id_cart: id, id_product: idProduct, amount: 1});
+            //Verificar si el carrito existe
+            const cart = await Cart.findById(id);
+            if (!cart) {
                 return {
-                    status : "success",
-                    message : 'Product added correctly'
+                    status : "Error",
+                    message : 'Cart Not found'
                 }
             }
-            amount = amount[0].amount + 1;
-            const results = await this.database.from('carts_products').where({id_cart: id, id_product: idProduct})
-            .update({amount})
+            //Verificamos si el producto existe en el carrito de compras, para aumentarle la cantidad
+            const existProduct = cart.products.some( product => product.id_product === idProduct);
+            if (existProduct) {
+                await Cart.findOneAndUpdate({_id : id, "products.id_product": idProduct}, { $inc : {"products.$.amount": 1}});
+                return {
+                    status : "success",
+                    message : 'Amount Product updated correctly'
+                }
+            }
+            await Cart.findOneAndUpdate({_id : id}, { $addToSet : {"products" : {"id_product": idProduct, "amount": 1}}});
             return {
                 status : "success",
-                message : 'Amount Product updated correctly'
+                message : 'Product Added correctly'
             }
         } catch (error) {
             return {
@@ -122,23 +134,26 @@ class ContainerCart {
 
     async deleteProductToCart ( id, idProduct ) {
         try {
-            const resultAmount = await this.database.from('carts_products').select('amount').where({'id_cart' :id , 'id_product': idProduct});
-            let amount = JSON.parse(JSON.stringify(resultAmount));
-            if (amount[0].amount === 1) {
-                await this.database.from('carts_products').where({id_cart: id, id_product: idProduct}).del();
+            //Verificamos si el producto que existe en el carrito de compras, su cantidad es mas de 0
+            const cart = await Cart.findById(id);
+            if (!cart) {
                 return {
-                    status : "success",
-                    message : 'Product Deleted Correctly'
+                    status : "Error",
+                    message : 'Cart Not found'
                 }
             }
-
-            if (amount[0].amount !== 0) {
-                amount = amount[0].amount - 1
-                const results = await this.database.from('carts_products').where({id_cart: id, id_product: idProduct}).update({amount})
+            const product = cart.products.find( product => product.id_product === idProduct);
+            if (product.amount > 1) {
+                await Cart.findOneAndUpdate({_id : id, "products.id_product": idProduct}, { $inc : {"products.$.amount": - 1}});
                 return {
                     status : "success",
                     message : 'Cantidad reducida'
                 }
+            }
+            await Cart.updateOne({_id : id, "products.id_product": idProduct}, { $pull : { 'products' : { $elemMatch: { 'id_product': { $eq: idProduct } } } } });
+            return {
+                status : "success",
+                message : 'Product Deleted Correctly'
             }
         } catch (error) {
             return {
@@ -151,7 +166,7 @@ class ContainerCart {
 
     async deleteProduct ( id, idProduct ) {
         try {
-            await this.database.from('carts_products').where({id_cart: id, id_product: idProduct}).del();
+            await Cart.findOneAndDelete({_id : id, "products.id_product": idProduct});
             return {
                 status : "success",
                 message : 'Product Deleted Correctly'

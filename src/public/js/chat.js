@@ -21,7 +21,7 @@ formChat.addEventListener('submit' , (e) => {
     const date = `${hours === 0 ? 12 : hours}:${hoy.getMinutes()} ${hours >= 12 ? 'PM' : 'AM'}`;
 
     const objMessage = {
-        id_message : socketChat.id,
+        id_message : Date.now,
         message : messageChat.value.trim(),
         timestamp : date,
         user

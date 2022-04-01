@@ -1,23 +1,32 @@
 import { v4 as uuidv4 } from 'uuid';
-import { dbConnection } from '../database/mongo/config.database.js';
-import Product from '../models/product.js'
+import { database } from '../../database/mysql/config.database.js';
+// import { proccessInitialDatabase } from '../database/mysql/createTable.js';
 
-class  Contenedor {
-    constructor( nameTable){
+class  Container {
+    constructor(nameTable){
         this.nameTable = nameTable;
-        // this.connectionDB();
+        this.database = this.connectionDB();
+        // this.createTable();
     }
 
-    // connectionDB () {
-    //     dbConnection();
+    connectionDB () {
+        return database;
+    }
+
+    // createTable () {
+    //     proccessInitialDatabase();
     // }
 
     async getAll(limit) {
         try {
             //Mostramos solo los productos que estan activos
-            const [total, products] = await Promise.all([
-                Product.count
+            const [results, resultTotal] = await Promise.all([
+                this.database.from(this.nameTable).select("*").where('status', true).limit(limit),
+                this.database.count('id_product').from(this.nameTable).where('status', true)
             ])
+            const products = JSON.parse(JSON.stringify(results));
+            const total = JSON.parse(JSON.stringify(resultTotal));
+            const totalProductsShow = products.length;
             
             //Eliminamos los campos que no deberian mostrarse al usuario
             products.forEach( product => {
@@ -45,8 +54,7 @@ class  Contenedor {
 
     async getById(id) {
         try {
-            const database = knex(this.options);
-            const results = await database.from("products").select('*').where('id_product', id);
+            const results = await this.database.from("products").select('*').where('id_product', id);
             const products = JSON.parse(JSON.stringify(results))
             return {
                 status : "success",
@@ -71,8 +79,7 @@ class  Contenedor {
         }
 
         try {
-            const database = knex(this.options);
-            await database.from(this.nameTable).insert(newProduct);
+            await this.database.from(this.nameTable).insert(newProduct);
             return {
                 status : "success",
                 message : 'Products saved correctly',
@@ -89,8 +96,7 @@ class  Contenedor {
 
     async updateProduct ( id, data ) {
         try {
-            const database = knex(this.options);
-            await database.from(this.nameTable).where('id_product', id).update(data);
+            await this.database.from(this.nameTable).where('id_product', id).update(data);
             return {
                 status : "success",
                 message : 'Products Updated correctly'
@@ -105,8 +111,7 @@ class  Contenedor {
     }
     async deleteById (id) {
         try {
-            const database = knex(this.options);
-            await database.from(this.nameTable).where('id_product', id).update({status: false});
+            await this.database.from(this.nameTable).where('id_product', id).update({status: false});
             return {
                 status : "success",
                 message : 'Products Deleted correctly'
@@ -122,8 +127,7 @@ class  Contenedor {
 
     async deleteAll () {
         try {
-            const database = knex(this.options);
-            await database.from(this.nameTable).del();
+            await this.database.from(this.nameTable).del();
             
         } catch (error) {
             return {
@@ -135,6 +139,4 @@ class  Contenedor {
     }
 }
 
-export {
-    Contenedor
-}
+export default Container
