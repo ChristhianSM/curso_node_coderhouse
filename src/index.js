@@ -21,13 +21,11 @@ const app = express();
 
 app.use(express.urlencoded({extended:true})) //Middleware para leer queries del url
 app.use(express.json()) //Middleware para leer archivos JSON
-console.log(__dirname + '/public')
 app.use(express.static(path.join(__dirname + '/public'))) //Middleware para crear un espacio estatico
 
 // app.engine('handlebars', handlebars.engine());
 // app.set('views', __dirname+'/views');
 // app.set('view engine', 'handlebars');
-
 
 //Rutas 
 app.use('/api/products', productsRouter)

@@ -1,2 +1,26 @@
 [
+  {
+    "name": "Laptop",
+    "price": 150,
+    "image": "https://www.sincable.mx/wp-content/uploads/2020/01/patrick-ward-z_dLXnQg0JY-unsplash-scaled.jpg",
+    "description": "Para realizar trabajos digitales",
+    "stock": 50,
+    "id": 1
+  },
+  {
+    "name": "Cpu Ryzen 4000",
+    "price": 6000,
+    "image": "https://www.sincable.mx/wp-content/uploads/2020/01/patrick-ward-z_dLXnQg0JY-unsplash-scaled.jpg",
+    "description": "Para realizar trabajos digitales",
+    "stock": 50,
+    "id": 2
+  },
+  {
+    "name": "Laptop",
+    "price": 150,
+    "image": "https://www.sincable.mx/wp-content/uploads/2020/01/patrick-ward-z_dLXnQg0JY-unsplash-scaled.jpg",
+    "description": "Para realizar trabajos digitales",
+    "stock": 50,
+    "id": 3
+  }
 ]

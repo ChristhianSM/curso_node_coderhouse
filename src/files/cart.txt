@@ -5,18 +5,25 @@
     "products": []
   },
   {
-    "id": 2,
-    "timestamp": 1649046401690,
-    "products": []
-  },
-  {
     "id": 3,
     "timestamp": 1649046405844,
-    "products": []
+    "products": [
+      "2"
+    ]
   },
   {
     "id": 4,
     "timestamp": 1649046406516,
+    "products": []
+  },
+  {
+    "id": 5,
+    "timestamp": 1649050412969,
+    "products": []
+  },
+  {
+    "id": 6,
+    "timestamp": 1649050414068,
     "products": []
   }
 ]

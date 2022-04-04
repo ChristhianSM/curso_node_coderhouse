@@ -100,7 +100,7 @@ class Container {
         try {
             if (fs.existsSync(this.path)) {
                 const products = await getFetch(this.path);
-                const productFind = products.find( product => product.id === id);
+                const productFind = products.find( product => product.id == id);
                 if (productFind) {
                     return {
                         status: 'success',
@@ -122,13 +122,50 @@ class Container {
         }
     }
 
+    async updateProduct ( id, data ) {
+        try {
+            if (fs.existsSync(this.path)) {
+                let products = await getFetch(this.path);
+                const productFind = products.some( product => product.id == id);
+                if (!productFind) {
+                    return {
+                        status: 'Error',
+                        message : "Product not found"
+                    }
+                }
+
+                products = products.map( product => {
+                    if (product.id == id) {
+                        return {
+                            ...product,
+                            ...data
+                        }
+                    }
+                    return product
+                })
+
+                await fs.promises.writeFile(this.path, JSON.stringify(products, null, 2));
+
+                return {
+                    status : 'Success',
+                    message : "Product updated correctly",
+                }
+            }
+        } catch (error) {
+            return {
+                status : "Error",
+                message : error
+            }
+        }
+    }
+
     async deleteById (id) {
         try {
             if (fs.existsSync(this.path)) {
                 const products = await getFetch(this.path)
 
                 //Primero verificamos que el id a eliminar exista 
-                const productFind = products.find( product => product.id === id);
+                const productFind = products.find( product => product.id == id);
 
                 if (productFind) {
                     const newProducts = products.filter( product => product.id != id);
@@ -270,10 +307,10 @@ class Container {
             const carts = await getFetch(this.path);
             
             //Verificamos si existe el id del carrito para obtener sus productos
-            const idExist = carts.some( cart => cart.id === id);
+            const idExist = carts.some( cart => cart.id == id);
 
             if (idExist) {
-                const products = carts.find( cart => cart.id === id);
+                const products = carts.find( cart => cart.id == id);
                 return {
                     status : 'success',
                     message : `Cart ${id} products obtained successfully`,
@@ -292,14 +329,14 @@ class Container {
         }
     }
 
-    async deleteById(id) {
+    async deleteCart(id) {
         if (fs.existsSync(this.path)) {
             const carts = await getFetch(this.path);
             
             //Verificamos si existe el id del carrito para eliminarlo 
-            const idExist = carts.some( cart => cart.id === id);
+            const idExist = carts.some( cart => cart.id == id);
             if (idExist) {
-                const newsCarts = carts.filter( cart => cart.id !== id);
+                const newsCarts = carts.filter( cart => cart.id != id);
                 try {
                     await fs.promises.writeFile(this.path, JSON.stringify(newsCarts, null, 2));
                     return {
@@ -330,17 +367,17 @@ class Container {
             const carts = await getFetch(this.path);
             
             //Verificamos si existe el id del carrito para agregar el producto 
-            const idExist = carts.some( cart => cart.id === id);
+            const idExist = carts.some( cart => cart.id == id);
 
             //Verificamos si el producto esta en mi base de datos
-            const products = JSON.parse(await fs.promises.readFile('../../files/products.txt', 'utf-8'));
+            const products = JSON.parse(await fs.promises.readFile('./src/files/products.txt', 'utf-8'));
 
-            const idExistProduct = products.some( product => product.id === idProduct);
+            const idExistProduct = products.some( product => product.id == idProduct);
             let currentCart = [];
 
             if (idExist && idExistProduct) {
                 const cartsUpdated = carts.map( cart => {
-                    if (cart.id === id) {
+                    if (cart.id == id) {
                         cart.products.push(idProduct);
                         currentCart = cart;
                         return cart
@@ -380,7 +417,7 @@ class Container {
             const carts = await getFetch(this.path);
             
             //Verificamos si existe el id del carrito para agregar el producto 
-            const idExist = carts.some( cart => cart.id === id);
+            const idExist = carts.some( cart => cart.id == id);
             if (!idExist) {
                 return {
                     status : 'success',
@@ -389,14 +426,14 @@ class Container {
             }
 
             //Verificamos si exite el id del producto a eliminar
-            const cartFound = carts.find( cart => cart.id === id);
+            const cartFound = carts.find( cart => cart.id == id);
             
-            const idProductExist = cartFound.products.some( product => product === idProduct);
+            const idProductExist = cartFound.products.some( product => product == idProduct);
 
             if (idExist && idProductExist) {
                 const cartsUpdated = carts.map( cart => {
-                    if (cart.id === id) {
-                        cart.products =  cart.products.filter( product => product !== idProduct);
+                    if (cart.id == id) {
+                        cart.products =  cart.products.filter( product => product != idProduct);
                         return cart
                     }else{
                         return cart
