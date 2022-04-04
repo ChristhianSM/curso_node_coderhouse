@@ -1,17 +1,12 @@
 import  { request, response } from 'express';
-// import  { Contenedor } from "../models/UserManagerProducts.js";
-import { __dirname } from '../helpers/getDirname.js';
 import { productDao } from '../daos/index.js';   
-// import options from '../database/mysql/options/mysqlconfig.js'
-
-// const contenedor = new Contenedor(options, 'products');
 
 const getProducts = async (req=request, res=response) => {
 
     //Leer los queries para obtener productos por limites
     const { page = 10 , from = 0} = req.query
 
-    const result = await productDao.getAll(parseInt(page));
+    const result = await productDao.getAllProducts(parseInt(page));
     res.status(result.status === "success" ? 200 : 400).json(result)
     
 }

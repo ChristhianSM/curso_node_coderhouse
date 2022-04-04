@@ -105,7 +105,7 @@ function clearInputs () {
 }
 
 async function deleteProduct(idProduct) {
-    const response = await fetch(`http://localhost:5000/api/products/${idProduct}`, {
+    const response = await fetch(`http://localhost:4000/api/products/${idProduct}`, {
         method: 'DELETE'
     });
     const result = await response.json();
