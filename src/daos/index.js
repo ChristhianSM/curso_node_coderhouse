@@ -1,11 +1,3 @@
-import CartDaoFs from './carts/CartDaoFs.js';
-import CartDaoMemory from './carts/CartDaoMemory.js';
-import CartDaoMongo from './carts/CartDaoMongo.js';
-import CartDaoMysql from './carts/CartDaoMysql.js';
-import ProductDaoFs from './products/ProductDaoFs.js';
-import ProductDaoMemory from './products/ProductDaoMemory.js';
-import ProductDaoMongo from './products/ProductDaoMongo.js';
-import ProductDaoMysql from './products/ProductDaoMysql.js';
 
 const dbToUse = 'mongo';
 let productDao;
@@ -13,18 +5,28 @@ let cartDao
 
 switch (dbToUse) {
     case 'memory':
+        const { default : ProductDaoMemory }  = await import('./products/ProductDaoMemory.js');
+        const { default : CartDaoMemory } = await import('./carts/CartDaoMemory.js');
+
         productDao = new ProductDaoMemory();
         cartDao = new CartDaoMemory();
         break;
     case 'fs':
+        const { default : ProductDaoFs }  = await import('./products/ProductDaoFs.js');
+        const { default : CartDaoFs } = await import('./carts/CartDaoFs.js');
         productDao = new ProductDaoFs();
         cartDao = new CartDaoFs();
         break;
     case 'mongo':
+        const { default : ProductDaoMongo }  = await import('./products/ProductDaoMongo.js');
+        const { default : CartDaoMongo } = await import('./carts/CartDaoMongo.js');
         productDao = new ProductDaoMongo();
         cartDao = new CartDaoMongo();
         break;
     case 'mysql':
+        const { default : ProductDaoMysql }  = await import('./products/ProductDaoMysql.js');
+        const { default : CartDaoMysql } = await import('./carts/CartDaoMysql.js');
+
         productDao = new ProductDaoMysql();
         cartDao = new CartDaoMysql();
         break;

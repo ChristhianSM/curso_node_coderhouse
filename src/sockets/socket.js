@@ -8,7 +8,7 @@ export default (io) => {
     io.on("connection", async (socket) => {
       console.log("nuevo socket connectado:", socket.id);
       //Para mostrar los productos apenas inicie 
-        const results = await productDao.getAll();
+        const results = await productDao.getAllProducts();
         io.emit('products' ,results.payload.products)
 
         //Para mostrar los mensajes apenas inicie
@@ -20,26 +20,25 @@ export default (io) => {
 
         //Recibimos al usuario logeado 
         socket.on('user', async (user) => {
-            const results  = await chat.saveUsers(user);
+            await chat.saveUsers(user);
             const users = await chat.getAllUsers();
             socket.emit('users-login', users.payload)
         })
 
         socket.on('sendProduct', async (data) => {
             await productDao.save(data);
-            const results = await productDao.getAll();
+            const results = await productDao.getAllProducts();
             io.emit('products' , results.payload.products)
         })
 
         socket.on('message', async (data) => {
-            console.log(data)
-            const resultado = await chat.save(data);
+            await chat.save(data);
             const messages = await chat.getAllMessages();
             io.emit('data-messages', messages.results);
         })
 
         socket.on('deleteProduct', async (data) => {
-            const results = await productDao.getAll();
+            const results = await productDao.getAllProducts();
             io.emit('products' ,results.payload.products)
         })
     });
