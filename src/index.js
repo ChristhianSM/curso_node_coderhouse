@@ -5,6 +5,7 @@ import handlebars from 'express-handlebars'
 
 import productsRouter from './routers/products.router.js';
 import cartRouter from './routers/cart.router.js';
+import productTestRouter from './routers/productsTest.router.js';
 
 import Socket from './sockets/socket.js'
 
@@ -30,6 +31,9 @@ app.use(express.static(path.join(__dirname + '/public'))) //Middleware para crea
 //Rutas 
 app.use('/api/products', productsRouter)
 app.use('/api/cart', cartRouter)
+
+//Ruta para pruebas
+app.use('/api/products-test', productTestRouter)
 
 //Settings
 app.set('port', process.env.PORT || 5000)

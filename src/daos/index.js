@@ -1,15 +1,21 @@
 
-const dbToUse = 'mongo';
+const dbToUse = 'memory';
 let productDao;
-let cartDao
+let cartDao;
+
+//Para aplicar test
+let productTestDao;
 
 switch (dbToUse) {
     case 'memory':
         const { default : ProductDaoMemory }  = await import('./products/ProductDaoMemory.js');
         const { default : CartDaoMemory } = await import('./carts/CartDaoMemory.js');
+        const { default : ProductTestDaoMemory }  = await import('./productsTest/ProductTestDaoMemory.js');
 
         productDao = new ProductDaoMemory();
         cartDao = new CartDaoMemory();
+        productTestDao = new ProductTestDaoMemory();
+
         break;
     case 'fs':
         const { default : ProductDaoFs }  = await import('./products/ProductDaoFs.js');
@@ -36,5 +42,6 @@ switch (dbToUse) {
 
 export  {
     productDao,
-    cartDao
+    cartDao,
+    productTestDao
 }

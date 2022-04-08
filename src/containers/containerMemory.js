@@ -65,8 +65,7 @@ class Container {
     async getById(id) {
        
         const products = this.elements;
-        console.log(id)
-        const productFind = products.find( product => product.id == id);
+        const productFind = this.elements.find( product => product.id == id);
         if (productFind) {
             return {
                 status: 'success',
