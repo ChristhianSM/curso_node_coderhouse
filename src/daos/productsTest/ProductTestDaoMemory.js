@@ -6,7 +6,7 @@ class ProductTestDaoMemory extends Container {
         super();
     }
 
-    popular(cant = 50) {
+    popular(cant = 10) {
         const news = [];
         for (let i = 0; i < cant; i++) {
             const newProduct = {
@@ -14,7 +14,7 @@ class ProductTestDaoMemory extends Container {
                 name : faker.commerce.productName(),
                 description : faker.commerce.productDescription(),
                 price : faker.commerce.price(),
-                img: faker.image.avatar(),
+                img: "https://random.imagecdn.app/100/100",
                 status: true
             }
             news.push(newProduct);
