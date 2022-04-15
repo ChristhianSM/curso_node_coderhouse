@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="./dist/output.css">
 </head>
 <body class="bg-gray-300" style="font-family:Roboto">
-    <div class="w-full h-screen flex items-center justify-center">
-        <form class="w-full md:w-2/6 bg-white rounded-lg form-login">
+    <div class="w-full flex items-center justify-center">
+        <form class="w-full md:w-2/6 bg-white rounded-lg form-login my-7">
             <div class="flex font-bold justify-center mt-6">
                 <img class="h-20 w-20"
                     src="https://raw.githubusercontent.com/sefyudem/Responsive-Login-Form/master/img/avatar.svg">
@@ -19,12 +19,32 @@
                 <div class="w-full mb-2">
                     <div class="flex items-center flex-col">
                         <input type='email' placeholder="Email"
-                            class="w-full border rounded px-3 py-2 text-gray-700 focus:outline-none email" />
+                            class="w-full border rounded px-3 py-2 text-gray-700 focus:outline-none email"  autocomplete="on"/>
                         <p class="message-error-email h-6 text-red-500 ml-3 w-full  text-xs" ></p>
                     </div>
                     <div class="flex items-center flex-col">
                         <input type='text' placeholder="Username"
                             class="w-full border rounded px-3 py-2 text-gray-700 focus:outline-none username" />
+                        <p class="message-error-user h-6 text-red-500 ml-3 w-full text-xs" ></p>
+                    </div>
+                    <div class="flex items-center flex-col">
+                        <input type='text' placeholder="Name"
+                            class="w-full border rounded px-3 py-2 text-gray-700 focus:outline-none name" />
+                        <p class="message-error-user h-6 text-red-500 ml-3 w-full text-xs" ></p>
+                    </div>
+                    <div class="flex items-center flex-col">
+                        <input type='text' placeholder="LastName"
+                            class="w-full border rounded px-3 py-2 text-gray-700 focus:outline-none lastname" />
+                        <p class="message-error-user h-6 text-red-500 ml-3 w-full text-xs" ></p>
+                    </div>
+                    <div class="flex items-center flex-col">
+                        <input type='text' placeholder="Age"
+                            class="w-full border rounded px-3 py-2 text-gray-700 focus:outline-none age" />
+                        <p class="message-error-user h-6 text-red-500 ml-3 w-full text-xs" ></p>
+                    </div>
+                    <div class="flex items-center flex-col">
+                        <input type='text' placeholder="Avatar"
+                            class="w-full border rounded px-3 py-2 text-gray-700 focus:outline-none avatar" />
                         <p class="message-error-user h-6 text-red-500 ml-3 w-full text-xs" ></p>
                     </div>
                 </div>
@@ -39,6 +59,11 @@
 
         const username = document.querySelector('.username');
         const email = document.querySelector('.email');
+        const name = document.querySelector('.name');
+        const lastname = document.querySelector('.lastname');
+        const age = document.querySelector('.age');
+        const avatar = document.querySelector('.avatar');
+
         const formLogin = document.querySelector('.form-login');
         const messageErrorUser = document.querySelector('.message-error-user');
         const messageErrorEmail = document.querySelector('.message-error-email');
@@ -55,14 +80,23 @@
             messageErrorUser.textContent = ''
             username.classList.remove('border-red-500', 'placeholder-red-500')
             messageErrorEmail.textContent = ''
-            email.classList.remove('border-red-500', 'placeholder-red-500')
+            email.classList.remove('border-red-500', 'placeholder-red-500');
+
+            const user = {
+                id: email.value,
+                user : username.value,
+                name : name.value,
+                lastname : lastname.value,
+                age : age.value,
+                avatar : avatar.value,
+            }
 
             socketLogin.emit('user', {
                 email: email.value,
-                user : username.value
+                user : username.value,
             });
 
-            sessionStorage.setItem('userActive', username.value.trim())
+            sessionStorage.setItem('userActive', JSON.stringify(user))
             location.replace('products.html');
         })
     </script>

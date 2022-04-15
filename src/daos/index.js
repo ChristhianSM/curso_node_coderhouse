@@ -6,15 +6,20 @@ let cartDao;
 //Para aplicar test
 let productTestDao;
 
+//Para guardar los mensajes
+let messagesDao;
+
 switch (dbToUse) {
     case 'memory':
         const { default : ProductDaoMemory }  = await import('./products/ProductDaoMemory.js');
         const { default : CartDaoMemory } = await import('./carts/CartDaoMemory.js');
         const { default : ProductTestDaoMemory }  = await import('./productsTest/ProductTestDaoMemory.js');
+        const { default : MessagesDaoMemory }  = await import('./messages/MessagesDaoFs.js');
 
         productDao = new ProductDaoMemory();
         cartDao = new CartDaoMemory();
         productTestDao = new ProductTestDaoMemory();
+        messagesDao = new MessagesDaoMemory();
 
         break;
     case 'fs':
@@ -43,5 +48,6 @@ switch (dbToUse) {
 export  {
     productDao,
     cartDao,
-    productTestDao
+    productTestDao, 
+    messagesDao
 }

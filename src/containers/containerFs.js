@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { normalizrMessages } from '../helpers/normalizr.js';
 
 const getFetch = async (path) => {
     try {
@@ -13,8 +14,9 @@ const getFetch = async (path) => {
 
 class Container {
 
-    constructor(path) {
+    constructor(path, otherPath) {
         this.path = path;
+        this.otherPath = otherPath;
     }
     //Products
     async getAllProducts() {
@@ -462,6 +464,112 @@ class Container {
         return {
             status : 'Error',
             message : 'File not found'
+        }
+    }
+
+    //Messages
+    async saveUsers(user){
+        try {
+            //Verificamos que exista el documento
+            if (fs.existsSync(this.otherPath)) {
+                const data = await getFetch(this.otherPath)
+
+                //Verificamos si el archivo contiene productos, por que unicamente puede estar creado pero sin productos 
+                if (data !== "" && data.length > 0) {
+                    const users = data;
+                    users.push(product);
+                    await fs.promises.writeFile(this.otherPath, JSON.stringify(users, null, 2));
+                    return {
+                        status : "Success",
+                        message : "User saved successfully"
+                    }
+                }
+                await fs.promises.writeFile(this.otherPath, JSON.stringify([user], null, 2));
+                return {
+                    status : "Success",
+                    message : "User saved successfully"
+                }
+            }
+        } catch (error) {
+            return {
+                status : "Error",
+                message : error
+            }
+        }
+    }
+
+    async getAllUsers() {
+        try {
+            if (fs.existsSync(this.otherPath)) {
+                const users = await getFetch(this.otherPath);
+                return {
+                    status: 'success',
+                    message : "Products obtained correctly",
+                    payload : users
+                };  
+            }
+            return {
+                status: "Error",
+                message : "There are no products",
+            };
+        } catch (error) {
+            return {
+                status : "Error",
+                message : error
+            }
+        }
+    }
+
+    async save(message) {
+        try {
+            //Verificamos que exista el documento
+            if (fs.existsSync(this.path)) {
+                const data = await getFetch(this.path)
+
+                //Verificamos si el archivo contiene productos, por que unicamente puede estar creado pero sin productos 
+                if (data !== "" && data.length > 0) {
+                    const messages = data;
+                    messages.push(message);
+                    await fs.promises.writeFile(this.path, JSON.stringify(messages, null, 2));
+                    return {
+                        status : "Success",
+                        message : "Product saved successfully"
+                    }
+                }
+                await fs.promises.writeFile(this.path, JSON.stringify([message], null, 2));
+                return {
+                    status : "Success",
+                    message : "Product saved successfully"
+                }
+            }
+        } catch (error) {
+            return {
+                status : "Error",
+                message : error
+            }
+        }
+    }
+
+    async getAllMessages() {
+        try {
+            if (fs.existsSync(this.path)) {
+                const messages = await getFetch(this.path);
+                // normalizrMessages(messages);
+                return {
+                    status: 'success',
+                    message : "Products obtained correctly",
+                    payload : messages
+                };  
+            }
+            return {
+                status: "Error",
+                message : "There are no products",
+            };
+        } catch (error) {
+            return {
+                status : "Error",
+                message : error
+            }
         }
     }
 }

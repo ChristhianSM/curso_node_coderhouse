@@ -1,20 +1,54 @@
 [
   {
-    "id": "r5GRc6aAbT6Yn39cAAAF",
-    "message": "Holaa",
-    "timestamp": "23:20 PM",
-    "user": "Pudr3t3"
+    "id": 1649829948139,
+    "timestamp": "1:5 AM",
+    "author": {
+      "id": "christhian2524@gmail.com",
+      "user": "Chris",
+      "name": "christhian",
+      "lastname": "silupu",
+      "age": "27",
+      "avatar": "url"
+    },
+    "message": "Holaaa"
   },
   {
-    "id": "r5GRc6aAbT6Yn39cAAAF",
-    "message": "Como estas ?",
-    "timestamp": "23:20 PM",
-    "user": "Pudr3t3"
+    "id": 1649829996908,
+    "timestamp": "1:6 AM",
+    "author": {
+      "id": "christhian2524@gmail.com",
+      "user": "Chris",
+      "name": "christhian",
+      "lastname": "silupu",
+      "age": "27",
+      "avatar": "url"
+    },
+    "message": "Como estas ?"
   },
   {
-    "id": "0THR4f_XYHwi0vx0AAAN",
-    "message": "Bien y tu ?",
-    "timestamp": "23:20 PM",
-    "user": "Romualdo"
+    "id": 1649830008990,
+    "timestamp": "1:6 AM",
+    "author": {
+      "id": "christhian2524@gmail.com",
+      "user": "Chris",
+      "name": "christhian",
+      "lastname": "silupu",
+      "age": "27",
+      "avatar": "url"
+    },
+    "message": "Bien y tu ?"
+  },
+  {
+    "id": 1649831869678,
+    "timestamp": "1:37 AM",
+    "author": {
+      "id": "Javier@gmail.com",
+      "user": "Jav",
+      "name": "Javier",
+      "lastname": "Romualdo",
+      "age": "27",
+      "avatar": "url2"
+    },
+    "message": "Holaa"
   }
 ]

@@ -1,8 +1,8 @@
-import { productDao } from '../daos/index.js'
-import Message from '../models/UserManagerChat.js';
-import optionsSqlite3 from '../database/mysqlite3/options/slqiteconfig.js';
+import { productDao, messagesDao } from '../daos/index.js'
+// import Message from '../models/UserManagerChat.js';
+// import optionsSqlite3 from '../database/mysqlite3/options/slqiteconfig.js';
 
-const chat = new Message(optionsSqlite3, "messages", "users");
+// const chat = new Message(optionsSqlite3, "messages", "users");
 
 export default (io) => {
     io.on("connection", async (socket) => {
@@ -12,16 +12,16 @@ export default (io) => {
         io.emit('products' ,results.payload.products)
 
         //Para mostrar los mensajes apenas inicie
-        const messages = await chat.getAllMessages(); 
-        io.emit('data-messages', messages.results);
+        const messages = await messagesDao.getAllMessages();
+        io.emit('data-messages', messages.payload);
 
-        const users = await chat.getAllUsers();
-        io.emit('users-login', users.results)
+        const users = await messagesDao.getAllUsers();
+        io.emit('users-login', users.payload)
 
         //Recibimos al usuario logeado 
         socket.on('user', async (user) => {
-            await chat.saveUsers(user);
-            const users = await chat.getAllUsers();
+            await messagesDao.saveUsers(user);
+            const users = await messagesDao.getAllUsers();
             socket.emit('users-login', users.payload)
         })
 
@@ -32,9 +32,9 @@ export default (io) => {
         })
 
         socket.on('message', async (data) => {
-            await chat.save(data);
-            const messages = await chat.getAllMessages();
-            io.emit('data-messages', messages.results);
+            await messagesDao.save(data);
+            const messages = await messagesDao.getAllMessages();
+            io.emit('data-messages', messages.payload);
         })
 
         socket.on('deleteProduct', async (data) => {

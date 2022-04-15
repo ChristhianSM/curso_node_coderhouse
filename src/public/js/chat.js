@@ -8,7 +8,8 @@ const containerUsers = document.querySelector('.container-users');
 let user = "";
 
 document.addEventListener('DOMContentLoaded' , () => {
-    user = sessionStorage.getItem('userActive');
+    user = JSON.parse(sessionStorage.getItem('userActive'));
+    console.log(user)
     if (!user) location.replace('/');
 })
 
@@ -21,12 +22,18 @@ formChat.addEventListener('submit' , (e) => {
     const date = `${hours === 0 ? 12 : hours}:${hoy.getMinutes()} ${hours >= 12 ? 'PM' : 'AM'}`;
 
     const objMessage = {
-        id_message : Date.now,
-        message : messageChat.value.trim(),
+        id : Date.now(),
         timestamp : date,
-        user
+        author : {
+            id: user.id,
+            user : user.user,
+            name : user.name,
+            lastname : user.lastname,
+            age : user.age,
+            avatar : user.avatar,
+        },
+        message : messageChat.value.trim(),
     }
-
     socketChat.emit('message',objMessage);
     messageChat.value = "";
 })
@@ -41,6 +48,7 @@ socketChat.on('users-login', async users => {
 })
 
 socketChat.on('data-messages', async (messages) => {
+    console.log(messages)
     const response = await fetch('./templates/message-chat.handlebars');
     const data = await response.text();
     

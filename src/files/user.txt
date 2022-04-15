@@ -1,14 +1,6 @@
 [
   {
     "email": "christhian2524@gmail.com",
-    "user": "Pudr3t3"
-  },
-  {
-    "email": "Romualdoski@gmail.com",
-    "user": "Romualdoski"
-  },
-  {
-    "email": "Correo@gmail.com",
-    "user": "Romualdo"
+    "user": "Chris"
   }
 ]
