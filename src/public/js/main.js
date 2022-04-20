@@ -14,8 +14,19 @@ const messageError = document.querySelector('.message-error');
 
 const tableProducts = document.querySelector('.table-products');
 
+document.addEventListener('DOMContentLoaded', () => {
+    validateUser();
+})
+
 validateInputs();
 btnAddProduct.addEventListener('click', validateForm);
+
+async function validateUser() {
+    const data = await fetch('http://localhost:4000/autentication/login')
+    const resp = await data.json();
+    document.querySelector('.nameUser').innerHTML = resp.name
+    clearInputs();
+}
 
 function validateForm() {
     if (!nameProduct.value.trim() 
@@ -43,10 +54,10 @@ function validateForm() {
         description : description.value,
         stock : stock.value,
     }
-
     socket.emit('sendProduct', product)
     clearInputs();
-    // sendData(formData);
+    console.log(formData)
+    sendData(formData);
 }
 
 
@@ -61,9 +72,14 @@ socket.on('products', async (products) => {
 })
 
 async function sendData(formData) {
-    const data = await fetch('/api/products', {
+    const data = await fetch('http://localhost:4000/api/products', {
         method:'POST',
-        body: formData
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: "Romualdo"
+        })
     })
     const resp = await data.json();
     clearInputs();

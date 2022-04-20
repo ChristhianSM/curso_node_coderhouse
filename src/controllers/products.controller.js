@@ -2,7 +2,6 @@ import  { request, response } from 'express';
 import { productDao } from '../daos/index.js';   
 
 const getProducts = async (req=request, res=response) => {
-
     //Leer los queries para obtener productos por limites
     const { page = 10 , from = 0} = req.query
 
@@ -25,7 +24,7 @@ const getProductById =async (req, res) => {
 
 const postProduct = async (req, res) => {
     const body = req.body;
-    
+    console.log(body)
     //Agregamos el producto para que persista
     const result = await productDao.save(body);
     res.status(result.status === "Success" ? 200 : 400).json(result)

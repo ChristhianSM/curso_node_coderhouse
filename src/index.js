@@ -1,10 +1,12 @@
 import express from 'express';
+import cors from 'cors'
 import dotenv from 'dotenv';
 import {Server as SocketIO} from 'socket.io'
 import handlebars from 'express-handlebars'
 
 import productsRouter from './routers/products.router.js';
 import cartRouter from './routers/cart.router.js';
+import login from './routers/login.router.js';
 import productTestRouter from './routers/productsTest.router.js';
 
 import Socket from './sockets/socket.js'
@@ -23,7 +25,7 @@ const app = express();
 app.use(express.urlencoded({extended:true})) //Middleware para leer queries del url
 app.use(express.json()) //Middleware para leer archivos JSON
 app.use(express.static(path.join(__dirname + '/public'))) //Middleware para crear un espacio estatico
-
+app.use(cors());
 // app.engine('handlebars', handlebars.engine());
 // app.set('views', __dirname+'/views');
 // app.set('view engine', 'handlebars');
@@ -31,6 +33,7 @@ app.use(express.static(path.join(__dirname + '/public'))) //Middleware para crea
 //Rutas 
 app.use('/api/products', productsRouter)
 app.use('/api/cart', cartRouter)
+app.use('/autentication', login);
 
 //Ruta para pruebas
 app.use('/api/products-test', productTestRouter)

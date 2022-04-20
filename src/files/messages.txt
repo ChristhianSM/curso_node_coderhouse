@@ -50,5 +50,18 @@
       "avatar": "url2"
     },
     "message": "Holaa"
+  },
+  {
+    "id": 1650004727942,
+    "timestamp": "1:38 AM",
+    "author": {
+      "id": "Christhian2524@gmail.com",
+      "user": "Omaira",
+      "name": "Omaira Palacios",
+      "lastname": "Sanchez",
+      "age": "26",
+      "avatar": "url"
+    },
+    "message": "Hola"
   }
 ]
