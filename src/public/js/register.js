@@ -1,10 +1,11 @@
 const socketLogin = io();
 
 const email = document.querySelector('#email');
+const name = document.querySelector('#name');
 const password = document.querySelector('#password');
-const formLogin = document.querySelector('.form-login');
+const formRegister = document.querySelector('.form-register');
 
-formLogin.addEventListener('submit', (e) => {
+formRegister.addEventListener('submit', (e) => {
     e.preventDefault();
 
     //Realizamos las validaciones
@@ -12,18 +13,14 @@ formLogin.addEventListener('submit', (e) => {
     const userDefault = email.value.slice(0, email.value.search('@'));
 
     const user = {
-        id: email.value,
+        name : name.value,
+        email: email.value,
         user : userDefault,
-        name : userDefault,
+        password : password.value,
         lastname : null,
         age : null,
         avatar : null,
     }
-
-    socketLogin.emit('user', {
-        email: email.value,
-        user : userDefault,
-    });
 
     // sessionStorage.setItem('userActive', JSON.stringify(user))
     // location.replace('products.html');
@@ -31,7 +28,7 @@ formLogin.addEventListener('submit', (e) => {
 })
 
 async function sendData(userData) {
-    const data = await fetch('http://localhost:4000/autentication/login', {
+    const data = await fetch('http://localhost:4000/autentication/register', {
         method:'POST',
         headers:{
           'Content-Type': 'application/json'
@@ -39,6 +36,9 @@ async function sendData(userData) {
         body: JSON.stringify(userData),
     })
     const resp = await data.json();
+    if (resp.status === "success") {
+        location.replace('products.html');
+    }
     clearInputs();
 }
 

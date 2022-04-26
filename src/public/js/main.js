@@ -18,13 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
     validateUser();
 })
 
-validateInputs();
+// validateInputs();
 btnAddProduct.addEventListener('click', validateForm);
 
 async function validateUser() {
     const data = await fetch('http://localhost:4000/autentication/login')
     const resp = await data.json();
-    document.querySelector('.nameUser').innerHTML = resp.name
+    document.querySelector('.nameUser').innerHTML = resp.user
     clearInputs();
 }
 

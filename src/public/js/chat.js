@@ -8,9 +8,9 @@ const containerUsers = document.querySelector('.container-users');
 let user = "";
 
 document.addEventListener('DOMContentLoaded' , () => {
-    user = JSON.parse(sessionStorage.getItem('userActive'));
-    console.log(user)
-    if (!user) location.replace('/');
+    // user = JSON.parse(sessionStorage.getItem('userActive'));
+    // console.log(user)
+    // if (!user) location.replace('/');
 })
 
 formChat.addEventListener('submit' , (e) => {

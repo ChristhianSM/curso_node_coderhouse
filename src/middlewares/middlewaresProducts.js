@@ -14,6 +14,13 @@ const middlewareAuth = (req=request, res=response , next) => {
     }
 }
 
-export {
-    middlewareAuth
+const isUserLogged = (req=request, res=response , next) => {
+    if (req.isAuthenticated()) return next();
+    res.redirect('/');
 }
+
+export {
+    middlewareAuth,
+    isUserLogged
+}
+

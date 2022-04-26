@@ -22,7 +22,7 @@ const __dirname = dirname(__filename);
 
 const app = express();
 
-app.use(express.urlencoded({extended:true})) //Middleware para leer queries del url
+app.use(express.urlencoded({extended:false})) //Middleware para leer queries del url
 app.use(express.json()) //Middleware para leer archivos JSON
 app.use(express.static(path.join(__dirname + '/public'))) //Middleware para crear un espacio estatico
 app.use(cors());
@@ -31,9 +31,9 @@ app.use(cors());
 // app.set('view engine', 'handlebars');
 
 //Rutas 
+app.use('/autentication', login);
 app.use('/api/products', productsRouter)
 app.use('/api/cart', cartRouter)
-app.use('/autentication', login);
 
 //Ruta para pruebas
 app.use('/api/products-test', productTestRouter)
