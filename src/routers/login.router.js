@@ -1,6 +1,5 @@
 import express, {request, response} from 'express';
 import flash from 'connect-flash'
-import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import session from 'express-session'
@@ -9,9 +8,16 @@ import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import { Strategy as LocalStrategy } from "passport-local";
 
+import { fileURLToPath } from 'url'
+import path, { dirname } from 'path'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 import { dbConnection } from '../database/mongo/config.database.js';
 import User from '../models/user.js';
 import { createHash, validatePassword } from '../helpers/hashPassword.js';
+import { isUserLogged } from '../middlewares/middlewaresProducts.js';
 
 //Para leer variables de entorno
 dotenv.config();
@@ -31,7 +37,7 @@ router.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: { 
-        maxAge : 60000
+        maxAge : 3000
      }
 }))
 
@@ -100,25 +106,24 @@ passport.use('signInStrategy', new LocalStrategy(
     }
 ))
 
-
 router.post('/login',passport.authenticate("signInStrategy", {
     successRedirect: '/products.html',
     failureRedirect : '/',
 }), (req = request, res = response) => {
-    req.session.user = req.body;
-    res.json({
-        status: "success"
-    })
+    res.redirect('/autentication/validateUser')
 })
 
 router.post('/register',passport.authenticate("signUpStrategy", {
     successRedirect: '/products.html',
     failureRedirect : '/validate.html',
 }) , (req = request, res = response) => {
-    console.log("Muestra algo p :c")
     res.json({
         status: "success"
     })
+})
+
+router.get('/validateUser', isUserLogged , (req = request, res = response) => {
+    res.render(path.join(__dirname + '/../public/products.html'))
 })
 
 router.get('/login', (req = request, res = response) => {
