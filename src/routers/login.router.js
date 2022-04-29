@@ -33,7 +33,7 @@ router.use(session({
         mongoUrl : process.env.MONGODB_CNN_SESSIONS,
         ttl: 3600
     }),
-    secret: 'mongoSecret1213',
+    secret: process.env.KEY_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { 
