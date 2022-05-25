@@ -1,5 +1,5 @@
 
-const dbToUse = 'memory';
+const dbToUse = 'mongo';
 let productDao;
 let cartDao;
 

@@ -20,7 +20,6 @@ class  Container {
                 Product.countDocuments({status: true}),
                 Product.find({status: true})
             ])
-            
             //Eliminamos los campos que no deberian mostrarse al usuario
             products.forEach( product => {
                 delete product.status;
